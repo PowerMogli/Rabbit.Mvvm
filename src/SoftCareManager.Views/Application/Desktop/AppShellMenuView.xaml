@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="SoftCareManager.Views.Application.Desktop.AppShellMenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:appCommands="clr-namespace:SoftCareManager.Common.UI.Commands;assembly=SoftCareManager.Common.UI"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Border BorderBrush="Black">
+        <Grid>
+            <StackPanel>
+                <Button Margin="15,20" Content="Patienten" Command="{x:Static appCommands:ApplicationCommands.NavigateToCommand}" CommandParameter="{Binding PatientParameter}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

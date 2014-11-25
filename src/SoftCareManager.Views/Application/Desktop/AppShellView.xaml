@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="SoftCareManager.Views.Application.Desktop.AppShellView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:rm="clr-namespace:SoftCareManager.Common.UI.Region;assembly=SoftCareManager.Common.UI"
+             xmlns:custom="clr-namespace:SoftCareManager.Common.UI.Controls;assembly=SoftCareManager.Common.UI"
+             xmlns:regions="clr-namespace:SoftCareManager.Contracts.General;assembly=SoftCareManager.Contracts"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <DockPanel>
+        <custom:RegionControl DockPanel.Dock="Top" ShellId="{Binding ShellId}" RegionName="{x:Static regions:Regions.SubMenuView}" />
+        <custom:RegionControl DockPanel.Dock="Bottom" ShellId="{Binding ShellId}" RegionName="{x:Static regions:Regions.OverView}" />
+    </DockPanel>
+</UserControl>

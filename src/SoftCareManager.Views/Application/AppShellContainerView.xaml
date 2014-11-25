@@ -1,0 +1,38 @@
+﻿<window:BaseWindow x:Class="SoftCareManager.Views.Application.AppShellContainerView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:appCommands="clr-namespace:SoftCareManager.Common.UI.Commands;assembly=SoftCareManager.Common.UI"
+        xmlns:rm="clr-namespace:SoftCareManager.Common.UI.Region;assembly=SoftCareManager.Common.UI"
+        xmlns:selector="clr-namespace:SoftCareManager.Common.UI.Templates;assembly=SoftCareManager.Common.UI"
+        xmlns:window="clr-namespace:SoftCareManager.Common.UI;assembly=SoftCareManager.Common.UI"
+        xmlns:regions="clr-namespace:SoftCareManager.Contracts.General;assembly=SoftCareManager.Contracts"
+        Title="SoftCareManager" 
+        Height="350" 
+        Width="525"
+        ChangeSkin="{Binding ChangeSkin}"
+        NavigateToCommand="{Binding NavigateTo}"
+        LoadedCommand="{Binding ViewLoaded}">
+    <window:BaseWindow.CommandBindings>
+        <CommandBinding Command="{x:Static appCommands:ApplicationCommands.ChangePlatformCommand}" Executed="ExecuteUIPlatformChange" CanExecute="CanExecuteGeneral" />
+        <CommandBinding Command="{x:Static appCommands:ApplicationCommands.ChangeShellCommand}" Executed="ExecuteShellChange" CanExecute="CanExecuteGeneral" />
+        <CommandBinding Command="{x:Static appCommands:ApplicationCommands.NavigateToCommand}" Executed="ExecuteNavigateTo" CanExecute="CanExecuteGeneral" />
+    </window:BaseWindow.CommandBindings>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <ContentControl rm:RegionManager.RegionName="{x:Static regions:Regions.AppMenuView}" Grid.Row="0" Grid.ColumnSpan="3" />
+        <ContentControl rm:RegionManager.RegionName="{x:Static regions:Regions.AppShellMenuView}" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" />
+        <ContentControl Content="{Binding Shell, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Grid.Row="1" Grid.Column="1" />
+        <ContentControl rm:RegionManager.RegionName="{x:Static regions:Regions.AppActionMenuView}" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" />
+        <ContentControl rm:RegionManager.RegionName="{x:Static regions:Regions.AppInformationView}" Grid.Row="2" Grid.ColumnSpan="3"/>
+    </Grid>
+</window:BaseWindow>

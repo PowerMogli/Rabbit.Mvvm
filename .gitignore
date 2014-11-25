@@ -41,3 +41,15 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# local directories
+DLLs/
+
+# Build results
+ 
+[Dd]ebug/
+[Rr]elease/
+x64/
+build/
+[Bb]in/
+[Oo]bj/ 

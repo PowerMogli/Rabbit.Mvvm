@@ -1,0 +1,38 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:patient="clr-namespace:SoftCareManager.ViewModel.Patient;assembly=SoftCareManager.ViewModel"
+                    xmlns:vm="clr-namespace:SoftCareManager.ViewModel.Application;assembly=SoftCareManager.ViewModel"
+                    xmlns:vmPatient="clr-namespace:SoftCareManager.ViewModel.Patient;assembly=SoftCareManager.ViewModel"
+                    xmlns:view="clr-namespace:SoftCareManager.Views.Application.Desktop"
+                    xmlns:viewPatient="clr-namespace:SoftCareManager.Views.Application.Desktop.Patienten">
+
+    <DataTemplate DataType="{x:Type vm:AppMenuViewModel}">
+        <view:AppMenuView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:AppInformationViewModel}">
+        <view:AppInformationView />
+    </DataTemplate>
+
+    <DataTemplate x:Shared="False" DataType="{x:Type vm:AppShellViewModel}">
+        <view:AppShellView />
+    </DataTemplate>
+
+    <!-- Patient-Views -->
+    <DataTemplate DataType="{x:Type patient:PatientOverviewViewModel}" >
+        <view:PatientOverviewView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:AppShellMenuViewModel}" >
+        <view:AppShellMenuView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vmPatient:PatientSubMenuViewModel}">
+        <viewPatient:PatientenSubMenuView Margin="5,8"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vmPatient:PatientStammdatenViewModel}" >
+        <viewPatient:PatientStammdatenView />
+    </DataTemplate>
+
+</ResourceDictionary>
