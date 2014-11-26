@@ -18,6 +18,33 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftCareManager.ViewModel", "SoftCareManager.ViewModel\SoftCareManager.ViewModel.csproj", "{03EB5C2E-6AF7-4315-BD94-7159EF29499C}"
 EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 8
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://albix.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = SoftCareManager\u0020v2.0\\SoftCareManager.csproj
+		SccProjectName1 = SoftCareManager\u0020v2.0
+		SccLocalPath1 = SoftCareManager\u0020v2.0
+		SccProjectUniqueName2 = SoftCareManager.Contracts\\SoftCareManager.Contracts.csproj
+		SccProjectName2 = SoftCareManager.Contracts
+		SccLocalPath2 = SoftCareManager.Contracts
+		SccProjectUniqueName3 = SoftCareManager.Business\\SoftCareManager.Business.csproj
+		SccProjectName3 = SoftCareManager.Business
+		SccLocalPath3 = SoftCareManager.Business
+		SccProjectUniqueName4 = SoftCareManager.Views\\SoftCareManager.Views.csproj
+		SccProjectName4 = SoftCareManager.Views
+		SccLocalPath4 = SoftCareManager.Views
+		SccProjectUniqueName5 = SoftCareManager.Common.UI\\SoftCareManager.Common.UI.csproj
+		SccProjectName5 = SoftCareManager.Common.UI
+		SccLocalPath5 = SoftCareManager.Common.UI
+		SccProjectUniqueName6 = SoftCareManager.Common\\SoftCareManager.Common.csproj
+		SccProjectName6 = SoftCareManager.Common
+		SccLocalPath6 = SoftCareManager.Common
+		SccProjectUniqueName7 = SoftCareManager.ViewModel\\SoftCareManager.ViewModel.csproj
+		SccProjectName7 = SoftCareManager.ViewModel
+		SccLocalPath7 = SoftCareManager.ViewModel
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
