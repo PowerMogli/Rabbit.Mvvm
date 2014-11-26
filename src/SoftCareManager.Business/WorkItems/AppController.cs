@@ -43,7 +43,7 @@ namespace SoftCareManager.Business.WorkItems
             this.workItemProvider = workItemProvider;
             this.objectBuilder = objectBuilder;
 
-            EventBroker.Register(this);
+            RegisterOnEventBroker(this);
         }
 
         public async void Execute()
@@ -107,7 +107,7 @@ namespace SoftCareManager.Business.WorkItems
                 return;
             }
 
-            eventBroker.Register(item);
+            EventBroker.Register(item);
         }
 
         public ViewModelBase BuildViewModel(Type viewModelType)
