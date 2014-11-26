@@ -56,23 +56,14 @@ namespace SoftCareManager.Business.Services.Application
                 return;
             }
 
-            AssignShellIdToViewModel(navigationParameter.ShellId, viewModel);
-
             viewModel.Initialize(navigationParameter);
 
             _navigationService.RequestNavigation(GetRegion(navigationParameter), viewModel, navigationCallback);
         }
-        private static void AssignShellIdToViewModel(int shellId, ViewModelBase viewModel)
-        {
-            var shellAwareViewModel = viewModel as IShellAware;
-            if (shellAwareViewModel != null)
-            {
-                shellAwareViewModel.ShellId = shellId;
-            }
-        }
+
         private ViewModelBase BuildViewModel(INavigationParameter navigationParameter, ViewModelBase viewModel)
         {
-            if (MustBuildInstance(viewModel, navigationParameter) == false)
+            if (MustBuildInstance(viewModel, navigationParameter.ViewModelType) == false)
             {
                 return viewModel;
             }
@@ -80,17 +71,9 @@ namespace SoftCareManager.Business.Services.Application
             return _objectBuilder.Build(navigationParameter.ViewModelType, _appWorkItem) as ViewModelBase;
         }
 
-        private static bool MustBuildInstance(ViewModelBase viewModel, INavigationParameter navigationParameter)
+        private static bool MustBuildInstance(ViewModelBase viewModel, Type viewModelType)
         {
-            bool mustBuild = viewModel == null || viewModel.GetType() != navigationParameter.ViewModelType;
-            var shellAwareViewModel = viewModel as IShellAware;
-
-            if (shellAwareViewModel != null)
-            {
-                mustBuild |= shellAwareViewModel.ShellId != navigationParameter.ShellId;
-            }
-
-            return mustBuild;
+            return viewModel == null || viewModel.GetType() != viewModelType;
         }
 
         private IRegion GetRegion(INavigationParameter navigationParameter)
