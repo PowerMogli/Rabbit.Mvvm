@@ -1,4 +1,5 @@
 ﻿using SoftCareManager.Contracts.Services;
+using SoftCareManager.Contracts.ViewModel;
 using System;
 
 namespace SoftCareManager.Contracts.WorkItems
@@ -16,6 +17,8 @@ namespace SoftCareManager.Contracts.WorkItems
         object GetService(Type serviceType);
 
         void RegisterOnEventBroker(object item);
+
+        ViewModelBase BuildViewModel(Type viewModelType);
 
         void Execute();
 

@@ -1,7 +1,9 @@
 ﻿using Appccelerate.EventBroker;
+using SoftCareManager.Contracts;
 using SoftCareManager.Contracts.General;
 using SoftCareManager.Contracts.Model;
 using SoftCareManager.Contracts.Services;
+using SoftCareManager.Contracts.ViewModel;
 using SoftCareManager.Contracts.WorkItems;
 using System;
 using System.ComponentModel.Composition;
@@ -13,11 +15,13 @@ namespace SoftCareManager.Business.WorkItems
     [Export(typeof(IAppController))]
     public class AppController : IAppController
     {
-        private Service.IServiceProvider serviceProvider;
+        private readonly Service.IServiceProvider serviceProvider;
 
-        private IWorkItemProvider workItemProvider;
+        private readonly IWorkItemProvider workItemProvider;
 
         private IEventBroker eventBroker;
+        
+        private readonly IObjectBuilder objectBuilder;
 
         // Property injection - daher weiterhin testbar!
         public IEventBroker EventBroker
@@ -33,10 +37,11 @@ namespace SoftCareManager.Business.WorkItems
         public event EventHandler InitializationCompleted;
 
         [ImportingConstructor]
-        public AppController(Service.IServiceProvider serviceProvider, IWorkItemProvider workItemProvider)
+        public AppController(Service.IServiceProvider serviceProvider, IWorkItemProvider workItemProvider, IObjectBuilder objectBuilder)
         {
             this.serviceProvider = serviceProvider;
             this.workItemProvider = workItemProvider;
+            this.objectBuilder = objectBuilder;
 
             EventBroker.Register(this);
         }
@@ -103,6 +108,11 @@ namespace SoftCareManager.Business.WorkItems
             }
 
             eventBroker.Register(item);
+        }
+
+        public ViewModelBase BuildViewModel(Type viewModelType)
+        {
+            return objectBuilder.Build(viewModelType, this) as ViewModelBase;
         }
     }
 }

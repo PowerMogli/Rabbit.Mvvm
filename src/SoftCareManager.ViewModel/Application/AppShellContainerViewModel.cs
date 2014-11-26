@@ -12,7 +12,7 @@ using SoftCareManager.Contracts.WorkItems;
 
 namespace SoftCareManager.ViewModel.Application
 {
-    [Export(ViewModelName.DesktopMainViewModel, typeof (ViewModelBase))]
+    [Export(ViewModelName.DesktopMainViewModel, typeof(ViewModelBase))]
     public class AppShellContainerViewModel : ViewModelBase
     {
         private ICommand _viewLoaded;
@@ -55,7 +55,7 @@ namespace SoftCareManager.ViewModel.Application
         private void OnNavigateTo(object parameter)
         {
             var navigationService = _appController.GetService<INavigationProxy>();
-            navigationService.RequestNavigation(parameter as INavigationParameter);
+            navigationService.RequestNavigation(parameter as INavigationParameter, _appController);
         }
 
         private void OnViewLoaded(object obj)
@@ -69,7 +69,7 @@ namespace SoftCareManager.ViewModel.Application
         /// Handles a ping.
         /// </summary>
         /// <param name="e">The event arguments</param>
-        [EventSubscription(EventTopics.AppControllerInitialized, typeof (OnUserInterface))]
+        [EventSubscription(EventTopics.AppControllerInitialized, typeof(OnUserInterface))]
         public void OnInitialized(EventArgs e)
         {
             _onInitializationCompleted();

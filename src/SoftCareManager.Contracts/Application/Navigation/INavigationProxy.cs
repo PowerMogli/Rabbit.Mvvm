@@ -6,8 +6,8 @@ namespace SoftCareManager.Contracts.Application.Navigation
 {
     public interface INavigationProxy : IService
     {
-        void RequestNavigation(INavigationParameter navigationParameter, IAppController appWorkItem);
+        void RequestNavigation(INavigationParameter navigationParameter, IAppController appController);
 
-        void RequestNavigation(INavigationParameter navigationParameter, Action<INavigationResult> navigationCallback, IAppController appWorkItem);
+        void RequestNavigation(INavigationParameter navigationParameter, Action<INavigationResult> navigationCallback, IAppController appController);
     }
 }
