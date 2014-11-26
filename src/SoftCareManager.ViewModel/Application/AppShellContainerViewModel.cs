@@ -46,7 +46,7 @@ namespace SoftCareManager.ViewModel.Application
         private void OnNavigateTo(object parameter)
         {
             INavigationProxy navigationService = appController.GetService<INavigationProxy>();
-            navigationService.RequestNavigation(parameter as INavigationParameter, appController);
+            navigationService.RequestNavigation(parameter as INavigationParameter);
         }
 
         private void OnViewLoaded(object obj)
