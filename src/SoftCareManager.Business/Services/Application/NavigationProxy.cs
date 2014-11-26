@@ -1,72 +1,103 @@
-﻿using SoftCareManager.Contracts;
+using System;
+using System.ComponentModel.Composition;
+using System.Linq;
+using SoftCareManager.Contracts;
 using SoftCareManager.Contracts.Application.Navigation;
 using SoftCareManager.Contracts.Application.Region;
 using SoftCareManager.Contracts.General;
 using SoftCareManager.Contracts.Services;
 using SoftCareManager.Contracts.ViewModel;
 using SoftCareManager.Contracts.WorkItems;
-using System;
-using System.ComponentModel.Composition;
-using System.Linq;
 
 namespace SoftCareManager.Business.Services.Application
 {
-    [ServiceAttribute(ServiceName = Service.NavigationProxy)]
+    [Service(ServiceName = Service.NavigationProxy)]
     public class NavigationProxy : INavigationProxy
     {
-        private IObjectBuilder objectBuilder;
-        private INavigationService navigationService;
-        private IRegionManager regionManager;
-        private IAppController appWorkItem;
+        private readonly IObjectBuilder _objectBuilder;
+        private readonly INavigationService _navigationService;
+        private readonly IRegionManager _regionManager;
+        private readonly IAppController _appWorkItem;
 
         [ImportingConstructor]
-        public NavigationProxy(INavigationService navigationService, IObjectBuilder objectBuilder, IRegionManager regionManager, IAppController appWorkItem)
+        public NavigationProxy(INavigationService navigationService, IObjectBuilder objectBuilder,
+            IRegionManager regionManager, IAppController appWorkItem)
         {
-            this.objectBuilder = objectBuilder;
-            this.navigationService = navigationService;
-            this.regionManager = regionManager;
-            this.appWorkItem = appWorkItem;
+            _objectBuilder = objectBuilder;
+            _navigationService = navigationService;
+            _regionManager = regionManager;
+            _appWorkItem = appWorkItem;
         }
 
-        public void RequestNavigation(INavigationParameter navigationParameter, IAppController appWorkItem)
+        public void RequestNavigation(INavigationParameter navigationParameter)
         {
-            RequestNavigation(navigationParameter, nr => { }, appWorkItem);
+            RequestNavigation(navigationParameter, nr => { });
         }
 
-        public void RequestNavigation(INavigationParameter navigationParameter, Action<INavigationResult> navigationCallback, IAppController appController)
+        public void RequestNavigation(INavigationParameter navigationParameter,
+            Action<INavigationResult> navigationCallback)
         {
-            if (RequestMultiNavigation(navigationParameter, navigationCallback, appController))
+            if (RequestMultiNavigation(navigationParameter, navigationCallback))
             {
                 return;
             }
 
-            ViewModelBase viewModel = TryGetHostContent(navigationParameter);
+            var viewModel = TryGetHostContent(navigationParameter);
 
             if (IsNavigationAllowed(viewModel) == false)
             {
                 return;
             }
 
-            if (MustBuildInstance(viewModel, navigationParameter.ViewModelType))
+            viewModel = BuildViewModel(navigationParameter, viewModel);
+
+            if (viewModel == null)
             {
-                viewModel = objectBuilder.Build(navigationParameter.ViewModelType, appController) as ViewModelBase;
+                return;
             }
+
+            AssignShellIdToViewModel(navigationParameter.ShellId, viewModel);
 
             viewModel.Initialize(navigationParameter);
 
-            navigationService.RequestNavigation(GetRegion(navigationParameter), viewModel, navigationCallback);
+            _navigationService.RequestNavigation(GetRegion(navigationParameter), viewModel, navigationCallback);
+        }
+        private static void AssignShellIdToViewModel(int shellId, ViewModelBase viewModel)
+        {
+            var shellAwareViewModel = viewModel as IShellAware;
+            if (shellAwareViewModel != null)
+            {
+                shellAwareViewModel.ShellId = shellId;
+            }
+        }
+        private ViewModelBase BuildViewModel(INavigationParameter navigationParameter, ViewModelBase viewModel)
+        {
+            if (MustBuildInstance(viewModel, navigationParameter) == false)
+            {
+                return viewModel;
+            }
+
+            return _objectBuilder.Build(navigationParameter.ViewModelType, _appWorkItem) as ViewModelBase;
         }
 
-        private bool MustBuildInstance(ViewModelBase viewModel, Type viewModelType)
+        private static bool MustBuildInstance(ViewModelBase viewModel, INavigationParameter navigationParameter)
         {
-            return viewModel == null || viewModel.GetType() != viewModelType;
+            bool mustBuild = viewModel == null || viewModel.GetType() != navigationParameter.ViewModelType;
+            var shellAwareViewModel = viewModel as IShellAware;
+
+            if (shellAwareViewModel != null)
+            {
+                mustBuild |= shellAwareViewModel.ShellId != navigationParameter.ShellId;
+            }
+
+            return mustBuild;
         }
 
         private IRegion GetRegion(INavigationParameter navigationParameter)
         {
-            return regionManager.Regions.FirstOrDefault(
+            return _regionManager.Regions.FirstOrDefault(
                 r => (r.Name == navigationParameter.RegionName && navigationParameter.ShellId == r.ShellId)
-                || (r.ShellId == -1 && r.Name == navigationParameter.RegionName));
+                     || (r.ShellId == -1 && r.Name == navigationParameter.RegionName));
         }
 
         private ViewModelBase TryGetHostContent(INavigationParameter navigationParameter)
@@ -80,7 +111,8 @@ namespace SoftCareManager.Business.Services.Application
             return region.GetContent(navigationParameter.ViewModelType);
         }
 
-        private bool RequestMultiNavigation(INavigationParameter navigationParameter, Action<INavigationResult> navigationCallback, IAppController appController)
+        private bool RequestMultiNavigation(INavigationParameter navigationParameter,
+            Action<INavigationResult> navigationCallback)
         {
             var mergedNavigationParameter = navigationParameter as IMergedNavigationParameter;
             if (mergedNavigationParameter == null)
@@ -90,13 +122,13 @@ namespace SoftCareManager.Business.Services.Application
 
             foreach (var naviParameter in mergedNavigationParameter.NavigationParameter)
             {
-                RequestNavigation(naviParameter, navigationCallback, appController);
+                RequestNavigation(naviParameter, navigationCallback);
             }
 
             return true;
         }
 
-        private bool IsNavigationAllowed(ViewModelBase viewModel)
+        private static bool IsNavigationAllowed(ViewModelBase viewModel)
         {
             var navigationAware = viewModel as INavigationAware;
 
