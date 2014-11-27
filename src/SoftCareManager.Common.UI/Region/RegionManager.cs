@@ -20,14 +20,10 @@ namespace SoftCareManager.Common.UI.Region
         {
             this.Regions = new List<IRegion>();
         }
-        
-
 
         // Using a DependencyProperty as the backing store for ShellId.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ShellIdProperty =
             DependencyProperty.RegisterAttached("ShellId", typeof(int), typeof(RegionManager), new PropertyMetadata(0));
-
-        
 
         public static readonly DependencyProperty RegionNameProperty = DependencyProperty.RegisterAttached(
               "RegionName",

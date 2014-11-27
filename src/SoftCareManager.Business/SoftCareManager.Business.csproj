@@ -35,10 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Appccelerate.EventBroker">
+    <Reference Include="Appccelerate.EventBroker, Version=3.13.0.0, Culture=neutral, PublicKeyToken=917bca444d1f2b4c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Appccelerate.EventBroker.3.13.0\lib\net45\Appccelerate.EventBroker.dll</HintPath>
     </Reference>
-    <Reference Include="Appccelerate.Fundamentals">
+    <Reference Include="Appccelerate.Fundamentals, Version=2.7.0.0, Culture=neutral, PublicKeyToken=917bca444d1f2b4c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Appccelerate.Fundamentals.2.7.0\lib\portable-windows8+net45\Appccelerate.Fundamentals.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -57,7 +59,6 @@
     <Compile Include="Services\Application\NavigationService.cs" />
     <Compile Include="Services\Patient\PatientProvider.cs" />
     <Compile Include="Services\ServiceProvider.cs" />
-    <Compile Include="Services\Services.cs" />
     <Compile Include="WorkItems\Patient\PatientHospitalWorkItem.cs" />
     <Compile Include="WorkItems\Patient\PatientInsuranceWorkItem.cs" />
     <Compile Include="WorkItems\Patient\PatientOverviewWorkItem.cs" />

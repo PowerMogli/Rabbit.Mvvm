@@ -1,12 +1,10 @@
-﻿using SoftCareManager.Contracts.Services;
-using System;
+﻿using System;
 using System.Windows;
-using ServiceName = SoftCareManager.Contracts.General;
-using Services = SoftCareManager.Contracts.Services;
+using SoftCareManager.Contracts.Services;
 
-namespace SoftCareManager.Common.UI.Service
+namespace SoftCareManager.Common.UI.Services
 {
-    [Services.Service(ServiceName = ServiceName.Service.SkinService)]
+    [Service(ServiceName = Contracts.General.Service.SkinService)]
     public class SkinService : ISkinService
     {
         public static readonly Uri DesktopUri;
@@ -20,13 +18,13 @@ namespace SoftCareManager.Common.UI.Service
             TouchUri = new Uri("pack://application:,,,/SoftCareManager.Views;component/Application/Touch/AppResources.xaml", UriKind.RelativeOrAbsolute);
         }
 
-        public BaseWindow MainWindow { get { return (BaseWindow)System.Windows.Application.Current.MainWindow; } }
+        public Window MainWindow { get { return Application.Current.MainWindow; } }
 
-        public void ChangeSkin()
+        public void ChangeSkin(bool isTouch)
         {
             MainWindow.Resources.MergedDictionaries.RemoveAt(0);
 
-            MainWindow.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = MainWindow.IsTouch ? TouchUri : DesktopUri });
+            MainWindow.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = isTouch ? TouchUri : DesktopUri });
         }
     }
 }

@@ -9,5 +9,7 @@ namespace SoftCareManager.Common.UI.Commands
         public static RoutedCommand ChangeShellCommand = new RoutedCommand();
 
         public static RoutedCommand NavigateToCommand = new RoutedCommand();
+
+        public static RoutedCommand ToogleAppShellMenu = new RoutedCommand();
     }
 }

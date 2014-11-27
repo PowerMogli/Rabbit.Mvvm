@@ -1,6 +1,3 @@
-using System;
-using System.ComponentModel.Composition;
-using System.Windows.Input;
 using Appccelerate.EventBroker;
 using Appccelerate.EventBroker.Handlers;
 using SoftCareManager.Common;
@@ -9,70 +6,114 @@ using SoftCareManager.Contracts.General;
 using SoftCareManager.Contracts.Services;
 using SoftCareManager.Contracts.ViewModel;
 using SoftCareManager.Contracts.WorkItems;
+using System;
+using System.ComponentModel.Composition;
 
 namespace SoftCareManager.ViewModel.Application
 {
-    [Export(ViewModelName.DesktopMainViewModel, typeof(ViewModelBase))]
     public class AppShellContainerViewModel : ViewModelBase
     {
-        private ICommand _viewLoaded;
-        private ICommand _navigateTo;
-        private ICommand _changeSkin;
-
-        private Action _onInitializationCompleted;
-
+        private int _shellId;
+        private bool _isTouch;
         private readonly IAppController _appController;
 
-        public ICommand ViewLoaded
+        public bool IsTouch
         {
-            get { return _viewLoaded ?? (_viewLoaded = new DelegateCommand(OnViewLoaded)); }
+            get { return _isTouch; }
+            set
+            {
+                _isTouch = value;
+                RaisePropertyChanged();
+            }
         }
 
-        public ICommand NavigateTo
+        public int ShellId
         {
-            get { return _navigateTo ?? (_navigateTo = new DelegateCommand(OnNavigateTo)); }
+            get { return _shellId; }
+            set
+            {
+                _shellId = value;
+                RaisePropertyChanged();
+            }
         }
 
-        public ICommand ChangeSkin
-        {
-            get { return _changeSkin ?? (_changeSkin = new DelegateCommand(OnChangeSkin)); }
-        }
+        public AppShellSwitch AppShellSwitch { get; private set; }
 
         [ImportingConstructor]
-        public AppShellContainerViewModel(IAppController appController)
+        public AppShellContainerViewModel(IAppController appController, AppShellSwitch appShellSwitch)
         {
             _appController = appController;
+            AppShellSwitch = appShellSwitch;
 
-            appController.RegisterOnEventBroker(this);
+            _appController.RegisterOnEventBroker(this);
+
+            _appController.Execute();
         }
 
-        private void OnChangeSkin(object obj)
+        public bool CanExecuteGeneral(object obj)
+        {
+            return AppShellSwitch != null && AppShellSwitch.ShellViewModel != null;
+        }
+
+        public void ChangeSkin(object obj)
         {
             var skinService = _appController.GetService<ISkinService>();
-            skinService.ChangeSkin();
+            skinService.ChangeSkin(!IsTouch);
+
+            // Change of IsTouch-Property should be applied 
+            // after ResourceDictionary gets updated.
+            IsTouch = !IsTouch;
+
+            ChangePlatformControls(Regions.AppMenuView, typeof(AppMenuViewModel));
+            ChangePlatformControls(Regions.AppInformationView, typeof(AppInformationViewModel));
         }
 
-        private void OnNavigateTo(object parameter)
+        private void ChangePlatformControls(string regionName, Type viewModelType)
         {
+            var navigationParameter = new NavigationParameter(regionName, viewModelType);
+            navigationParameter.SetStayVisible(true);
+
+            NavigateTo(navigationParameter);
+        }
+
+        public void ToogleAppShellMenu()
+        {
+            NavigateTo(new NavigationParameter(Regions.AppShellMenuView, typeof(AppShellMenuViewModel)));
+        }
+
+        public void NavigateTo(object parameter)
+        {
+            var navigationParameter = parameter as INavigationParameter;
+            if (navigationParameter == null)
+            {
+                return;
+            }
+
+            navigationParameter.SetShellId(_shellId);
+
             var navigationService = _appController.GetService<INavigationProxy>();
-            navigationService.RequestNavigation(parameter as INavigationParameter, _appController);
+            navigationService.RequestNavigation(navigationParameter, _appController);
         }
 
-        private void OnViewLoaded(object obj)
+        public bool CanChangeShell(object parameter)
         {
-            _appController.Execute();
-
-            _onInitializationCompleted = obj as Action;
+            return _shellId != Convert.ToInt32(parameter);
         }
 
-        /// <summary>
-        /// Handles a ping.
-        /// </summary>
-        /// <param name="e">The event arguments</param>
+        public void ChangeShell(object parameter)
+        {
+            _shellId = Convert.ToInt32(parameter);
+
+            AppShellSwitch.Switch(_shellId);
+        }
+
+
         [EventSubscription(EventTopics.AppControllerInitialized, typeof(OnUserInterface))]
         public void OnInitialized(EventArgs e)
         {
-            _onInitializationCompleted();
+            ChangeShell(0);
+
+            NavigateTo(new NavigationParameter(Regions.AppMenuView, typeof(AppMenuViewModel)));
         }
     }
 }

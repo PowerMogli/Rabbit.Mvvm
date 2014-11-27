@@ -8,8 +8,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <DockPanel>
+    <DockPanel LastChildFill="True">
+        <custom:RegionControl DockPanel.Dock="Left" ShellId="{Binding ShellId}" RegionName="{x:Static regions:Regions.AppShellMenuView}" />
         <custom:RegionControl DockPanel.Dock="Top" ShellId="{Binding ShellId}" RegionName="{x:Static regions:Regions.SubMenuView}" />
-        <custom:RegionControl DockPanel.Dock="Bottom" ShellId="{Binding ShellId}" RegionName="{x:Static regions:Regions.OverView}" />
+        <custom:RegionControl DockPanel.Dock="Right" ShellId="{Binding ShellId}" RegionName="{x:Static regions:Regions.AppActionMenuView}" />
+        <custom:RegionControl ShellId="{Binding ShellId}" RegionName="{x:Static regions:Regions.OverView}" />
     </DockPanel>
 </UserControl>

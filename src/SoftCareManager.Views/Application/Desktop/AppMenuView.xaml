@@ -11,10 +11,12 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <Button Grid.Column="0" Command="{x:Static appCommands:ApplicationCommands.ChangePlatformCommand}" Content="Touch"/>
-        <Button Grid.Column="1" Command="{x:Static appCommands:ApplicationCommands.NavigateToCommand}" CommandParameter="{Binding OverViewParameter}" Content="Overview" />
-        <views:AppMonitorView Grid.Column="2"/>
+        <Button Grid.Column="1" Command="{x:Static appCommands:ApplicationCommands.ToogleAppShellMenu}" Content="Menu" />
+        <Button Grid.Column="2" Command="{x:Static appCommands:ApplicationCommands.NavigateToCommand}" CommandParameter="{Binding OverViewParameter}" Content="Overview" />
+        <views:AppMonitorView Grid.Column="3"/>
     </Grid>
 </UserControl>

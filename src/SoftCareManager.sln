@@ -17,9 +17,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftCareManager.Common", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftCareManager.ViewModel", "SoftCareManager.ViewModel\SoftCareManager.ViewModel.csproj", "{03EB5C2E-6AF7-4315-BD94-7159EF29499C}"
 EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "SoftCareManager.Architecture", "..\..\..\..\Downloads\Rabbit.Mvvm-master\src\SoftCareManager.Architecture\SoftCareManager.Architecture.modelproj", "{83249387-9F69-48D3-943D-A22679A9CB0F}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 8
+		SccNumberOfProjects = 9
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://albix.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -44,6 +46,9 @@ Global
 		SccProjectUniqueName7 = SoftCareManager.ViewModel\\SoftCareManager.ViewModel.csproj
 		SccProjectName7 = SoftCareManager.ViewModel
 		SccLocalPath7 = SoftCareManager.ViewModel
+		SccProjectUniqueName8 = ..\\..\\..\\..\\Downloads\\Rabbit.Mvvm-master\\src\\SoftCareManager.Architecture\\SoftCareManager.Architecture.modelproj
+		SccProjectName8 = SoftCareManager.Architecture
+		SccLocalPath8 = ..\\..\\..\\..\\Downloads\\Rabbit.Mvvm-master\\src\\SoftCareManager.Architecture
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +83,10 @@ Global
 		{03EB5C2E-6AF7-4315-BD94-7159EF29499C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03EB5C2E-6AF7-4315-BD94-7159EF29499C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03EB5C2E-6AF7-4315-BD94-7159EF29499C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83249387-9F69-48D3-943D-A22679A9CB0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83249387-9F69-48D3-943D-A22679A9CB0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83249387-9F69-48D3-943D-A22679A9CB0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83249387-9F69-48D3-943D-A22679A9CB0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

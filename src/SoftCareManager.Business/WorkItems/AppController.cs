@@ -1,7 +1,6 @@
 ﻿using Appccelerate.EventBroker;
 using SoftCareManager.Contracts;
 using SoftCareManager.Contracts.General;
-using SoftCareManager.Contracts.Model;
 using SoftCareManager.Contracts.Services;
 using SoftCareManager.Contracts.ViewModel;
 using SoftCareManager.Contracts.WorkItems;
@@ -20,7 +19,7 @@ namespace SoftCareManager.Business.WorkItems
         private readonly IWorkItemProvider workItemProvider;
 
         private IEventBroker eventBroker;
-        
+
         private readonly IObjectBuilder objectBuilder;
 
         // Property injection - daher weiterhin testbar!
@@ -30,9 +29,6 @@ namespace SoftCareManager.Business.WorkItems
             set { eventBroker = value; }
         }
 
-        /// <summary>
-        /// Occurs when the pong UI from UI thread is fired.
-        /// </summary>
         [EventPublication(EventTopics.AppControllerInitialized)]
         public event EventHandler InitializationCompleted;
 

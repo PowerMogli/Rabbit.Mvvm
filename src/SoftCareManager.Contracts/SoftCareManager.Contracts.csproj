@@ -80,6 +80,7 @@
     <Compile Include="Services\ServiceAttribute.cs" />
     <Compile Include="Services\Platform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\IShellAware.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="WorkItems\Patient\IPatientHospitalWorkItem.cs" />
     <Compile Include="WorkItems\Patient\IPatientInsuranceWorkItem.cs" />

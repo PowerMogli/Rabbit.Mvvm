@@ -2,6 +2,6 @@
 {
     public interface ISkinService : IService
     {
-        void ChangeSkin();
+        void ChangeSkin(bool isTouch);
     }
 }

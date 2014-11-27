@@ -2,9 +2,11 @@
 
 namespace SoftCareManager.ViewModel.Application
 {
-    public class AppShellViewModel : ViewModelBase
+    public class AppShellViewModel : ViewModelBase, IShellAware
     {
+        private bool _isActive;
         private int _shellId;
+
         public int ShellId
         {
             get { return _shellId; }
@@ -19,6 +21,16 @@ namespace SoftCareManager.ViewModel.Application
         {
             CanBeActivated = true;
             _shellId = shellId;
+        }
+
+        public bool IsActive
+        {
+            get { return _isActive; }
+            set
+            {
+                _isActive = value;
+                RaisePropertyChanged();
+            }
         }
     }
 }

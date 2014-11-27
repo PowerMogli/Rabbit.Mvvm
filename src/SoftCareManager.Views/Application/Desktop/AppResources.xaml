@@ -14,7 +14,7 @@
         <view:AppInformationView />
     </DataTemplate>
 
-    <DataTemplate x:Shared="False" DataType="{x:Type vm:AppShellViewModel}">
+    <DataTemplate DataType="{x:Type vm:AppShellViewModel}">
         <view:AppShellView />
     </DataTemplate>
 
