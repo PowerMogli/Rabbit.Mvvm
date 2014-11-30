@@ -19,12 +19,16 @@
     </DataTemplate>
 
     <!-- Patient-Views -->
-    <DataTemplate DataType="{x:Type patient:PatientOverviewViewModel}" >
-        <view:PatientOverviewView />
+    <DataTemplate DataType="{x:Type patient:PatientListOverviewViewModel}" >
+        <view:PatientListOverviewView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type vm:AppShellMenuViewModel}" >
         <view:AppShellMenuView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vmPatient:PatientListActionMenuViewModel}">
+        <viewPatient:PatientListActionMenuView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type vmPatient:PatientSubMenuViewModel}">

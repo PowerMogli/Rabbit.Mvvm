@@ -47,15 +47,32 @@
     <Compile Include="Commands\CommandExecutionManager.cs" />
     <Compile Include="Commands\DataContextCommandAdapter.cs" />
     <Compile Include="Commands\DataContextCommandBinding.cs" />
+    <Compile Include="Commands\PatientCommands.cs" />
     <Compile Include="Commands\RoutedCommandBinding.cs" />
     <Compile Include="Commands\RoutedCommandMonitor.cs" />
     <Compile Include="Controls\RegionControl.cs" />
+    <Compile Include="Groups\Base\BaseGroupManager.cs" />
+    <Compile Include="Groups\Base\IBaseGroupManager.cs" />
+    <Compile Include="Groups\Base\IGroup.cs" />
+    <Compile Include="Groups\Items\IItemsGroup.cs" />
+    <Compile Include="Groups\Items\IItemsGroupManager.cs" />
+    <Compile Include="Groups\Items\ItemsGroup.cs" />
+    <Compile Include="Groups\Items\ItemsGroupManager.cs" />
+    <Compile Include="Groups\Items\ItemsGroupSource.cs" />
+    <Compile Include="Groups\Selection\ISelectionGroup.cs" />
+    <Compile Include="Groups\Selection\ISelectionGroupManager.cs" />
+    <Compile Include="Groups\Selection\SelectedItemGroupConverter.cs" />
+    <Compile Include="Groups\Selection\SelectionGroup.cs" />
+    <Compile Include="Groups\Selection\SelectionGroupManager.cs" />
+    <Compile Include="Groups\Selection\SelectionGroupSource.cs" />
+    <Compile Include="Groups\Selection\SelectionGroupSourceExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Region\DelayedRegionCreator.cs" />
     <Compile Include="Region\Region.cs" />
     <Compile Include="Region\RegionManager.cs" />
     <Compile Include="Region\RegionManagerRegistrator.cs" />
     <Compile Include="Services\SkinService.cs" />
+    <Compile Include="Views\Patient\BasePatientActionMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SoftCareManager.Contracts\SoftCareManager.Contracts.csproj">
@@ -63,7 +80,9 @@
       <Name>SoftCareManager.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Region\Handler\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(ProjectDir)bin\Debug\SoftCareManager.Common.UI.dll" "$(SolutionDir)Dlls\" /Y /I</PostBuildEvent>

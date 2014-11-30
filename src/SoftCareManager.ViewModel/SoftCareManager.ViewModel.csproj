@@ -43,6 +43,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Appccelerate.Fundamentals.2.7.0\lib\portable-windows8+net45\Appccelerate.Fundamentals.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -51,12 +52,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\AppInformationViewModel.cs" />
     <Compile Include="Application\AppShellMenuViewModel.cs" />
     <Compile Include="Application\AppShellSwitch.cs" />
-    <Compile Include="Patient\PatientOverviewViewModel.cs" />
+    <Compile Include="Patient\PatientListActionMenuViewModel.cs" />
+    <Compile Include="Patient\PatientListOverviewViewModel.cs" />
     <Compile Include="Patient\PatientStammdatenViewModel.cs" />
     <Compile Include="Patient\PatientSubMenuViewModel.cs" />
     <Compile Include="Patient\PatientViewModel.cs" />
@@ -85,6 +88,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(ProjectDir)bin\Debug\SoftCareManager.ViewModel.dll" "$(SolutionDir)Dlls\" /Y /I</PostBuildEvent>

@@ -1,4 +1,6 @@
-﻿using SoftCareManager.Common.UI.Region;
+﻿using SoftCareManager.Common.UI.Groups.Items;
+using SoftCareManager.Common.UI.Groups.Selection;
+using SoftCareManager.Common.UI.Region;
 using SoftCareManager.Common.UI.Services;
 using SoftCareManager.Contracts.Application.Region;
 using SoftCareManager.Contracts.WorkItems;
@@ -15,15 +17,19 @@ namespace SoftCareManager.Views.Application
     public partial class AppShellContainerView : IPartImportsSatisfiedNotification
     {
         private readonly IRegionManager _regionManager;
+        private readonly ISelectionGroupManager _selectionGroupManager;
+        private readonly IItemsGroupManager _itemsGroupManager;
 
         [ImportingConstructor]
-        public AppShellContainerView(IRegionManager regionManager, IAppController appController)
+        public AppShellContainerView(IRegionManager regionManager, ISelectionGroupManager selectionGroupManager, IItemsGroupManager itemsGroupManager, IAppController appController)
         {
             InitializeComponent();
 
             DataContext = new AppShellContainerViewModel(appController, new AppShellSwitch());
 
             _regionManager = regionManager;
+            _itemsGroupManager = itemsGroupManager;
+            _selectionGroupManager = selectionGroupManager;
 
             Resources.MergedDictionaries.Add(new ResourceDictionary { Source = SkinService.DesktopUri });
         }
@@ -31,6 +37,8 @@ namespace SoftCareManager.Views.Application
         public void OnImportsSatisfied()
         {
             RegionManager.SetRegionManager(this, _regionManager);
+            SelectionGroupManager.SetSelectionGroupManager(this, _selectionGroupManager);
+            ItemsGroupManager.SetItemsGroupManager(this, _itemsGroupManager);
 
             _regionManager.Update();
         }

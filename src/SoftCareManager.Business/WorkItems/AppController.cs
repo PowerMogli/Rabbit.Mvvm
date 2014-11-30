@@ -44,7 +44,7 @@ namespace SoftCareManager.Business.WorkItems
 
         public async void Execute()
         {
-            await Task.Delay(2000);
+            await Task.Delay(100);
 
             OnInitializationCompleted();
         }

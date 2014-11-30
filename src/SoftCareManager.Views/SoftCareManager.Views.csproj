@@ -106,7 +106,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Application\Desktop\Patienten\PatientOverviewView.xaml">
+    <Page Include="Application\Desktop\Patienten\PatientListActionMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Application\Desktop\Patienten\PatientListOverviewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -143,8 +147,11 @@
     <Compile Include="Application\Desktop\Patienten\PatientenSubMenuView.xaml.cs">
       <DependentUpon>PatientenSubMenuView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Application\Desktop\Patienten\PatientOverviewView.xaml.cs">
-      <DependentUpon>PatientOverviewView.xaml</DependentUpon>
+    <Compile Include="Application\Desktop\Patienten\PatientListActionMenuView.xaml.cs">
+      <DependentUpon>PatientListActionMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Application\Desktop\Patienten\PatientListOverviewView.xaml.cs">
+      <DependentUpon>PatientListOverviewView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Application\Desktop\Patienten\PatientStammdatenView.xaml.cs">
       <DependentUpon>PatientStammdatenView.xaml</DependentUpon>

@@ -14,11 +14,36 @@ namespace SoftCareManager.ViewModel.Patient
 
         public Guid? Id { get; set; }
 
-        public string LastName { get; set; }
+        private string _lastName;
+        public string LastName
+        {
+            get { return _lastName; }
+            set
+            {
+                _lastName = value;
+                RaisePropertyChanged();
+            }
+        }
 
-        public string FirstName { get; set; }
+        private string _firstName;
+        public string FirstName
+        {
+            get { return _firstName; }
+            set
+            {
+                _firstName = value; RaisePropertyChanged();
+            }
+        }
 
-        public DateTime Birthday { get; set; }
+        private DateTime _birthday;
+        public DateTime Birthday
+        {
+            get { return _birthday; }
+            set
+            {
+                _birthday = value; RaisePropertyChanged();
+            }
+        }
 
         public PatientViewModel(IPatientArticleWorkItem patientArticleWorkItem, IPatientHospitalWorkItem patientHospitalWorkItem, IPatientInsuranceWorkItem patientInsuranceWorkItem)
         {
