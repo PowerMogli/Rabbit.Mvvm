@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace SoftCareManager.Common.UI.Groups.Base
 {
-    public interface IBaseGroupManager<TGroup, TGroupSource>
+    public interface IBaseGroupManager<out TGroup, in TGroupSource>
         where TGroup : IGroup
         where TGroupSource : IGroupSource
     {

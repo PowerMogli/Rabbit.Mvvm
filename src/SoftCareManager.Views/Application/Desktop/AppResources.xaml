@@ -3,9 +3,12 @@
                     xmlns:patient="clr-namespace:SoftCareManager.ViewModel.Patient;assembly=SoftCareManager.ViewModel"
                     xmlns:vm="clr-namespace:SoftCareManager.ViewModel.Application;assembly=SoftCareManager.ViewModel"
                     xmlns:vmPatient="clr-namespace:SoftCareManager.ViewModel.Patient;assembly=SoftCareManager.ViewModel"
+                    xmlns:vmTherapy="clr-namespace:SoftCareManager.ViewModel.Therapy;assembly=SoftCareManager.ViewModel"
                     xmlns:view="clr-namespace:SoftCareManager.Views.Application.Desktop"
-                    xmlns:viewPatient="clr-namespace:SoftCareManager.Views.Application.Desktop.Patienten">
+                    xmlns:viewPatient="clr-namespace:SoftCareManager.Views.Application.Desktop.Patienten"
+                    xmlns:viewTherapy="clr-namespace:SoftCareManager.Views.Application.Desktop.Therapy">
 
+    <!-- App-Views -->
     <DataTemplate DataType="{x:Type vm:AppMenuViewModel}">
         <view:AppMenuView />
     </DataTemplate>
@@ -18,13 +21,13 @@
         <view:AppShellView />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type vm:AppShellMenuViewModel}" >
+        <view:AppShellMenuView />
+    </DataTemplate>
+
     <!-- Patient-Views -->
     <DataTemplate DataType="{x:Type patient:PatientListOverviewViewModel}" >
         <view:PatientListOverviewView />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type vm:AppShellMenuViewModel}" >
-        <view:AppShellMenuView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type vmPatient:PatientListActionMenuViewModel}">
@@ -37,6 +40,15 @@
 
     <DataTemplate DataType="{x:Type vmPatient:PatientStammdatenViewModel}" >
         <viewPatient:PatientStammdatenView />
+    </DataTemplate>
+
+    <!-- Therapy-Views -->
+    <DataTemplate DataType="{x:Type vmTherapy:PatientTherapyListOverviewViewModel}">
+        <viewTherapy:PatientTherapiesOverviewView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vmTherapy:PatientTherapyActionMenuViewModel}">
+        <viewTherapy:PatientTherapiesActionMenuView />
     </DataTemplate>
 
 </ResourceDictionary>

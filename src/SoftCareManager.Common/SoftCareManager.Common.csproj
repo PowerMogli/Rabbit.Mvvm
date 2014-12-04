@@ -44,6 +44,7 @@
     <Compile Include="MergedNavigationParameter.cs" />
     <Compile Include="NavigationParameter.cs" />
     <Compile Include="ObjectBuilder.cs" />
+    <Compile Include="ObjectCreationInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +53,7 @@
       <Name>SoftCareManager.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(ProjectDir)bin\Debug\SoftCareManager.Common.dll" "$(SolutionDir)Dlls\" /Y /I</PostBuildEvent>

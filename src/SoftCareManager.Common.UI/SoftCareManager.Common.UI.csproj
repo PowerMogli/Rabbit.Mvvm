@@ -43,6 +43,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\UIVisibilityBinder.cs" />
     <Compile Include="Commands\ApplicationCommands.cs" />
     <Compile Include="Commands\CommandExecutionManager.cs" />
     <Compile Include="Commands\DataContextCommandAdapter.cs" />
@@ -54,14 +55,9 @@
     <Compile Include="Groups\Base\BaseGroupManager.cs" />
     <Compile Include="Groups\Base\IBaseGroupManager.cs" />
     <Compile Include="Groups\Base\IGroup.cs" />
-    <Compile Include="Groups\Items\IItemsGroup.cs" />
-    <Compile Include="Groups\Items\IItemsGroupManager.cs" />
     <Compile Include="Groups\Items\ItemsGroup.cs" />
     <Compile Include="Groups\Items\ItemsGroupManager.cs" />
     <Compile Include="Groups\Items\ItemsGroupSource.cs" />
-    <Compile Include="Groups\Selection\ISelectionGroup.cs" />
-    <Compile Include="Groups\Selection\ISelectionGroupManager.cs" />
-    <Compile Include="Groups\Selection\SelectedItemGroupConverter.cs" />
     <Compile Include="Groups\Selection\SelectionGroup.cs" />
     <Compile Include="Groups\Selection\SelectionGroupManager.cs" />
     <Compile Include="Groups\Selection\SelectionGroupSource.cs" />
@@ -72,7 +68,8 @@
     <Compile Include="Region\RegionManager.cs" />
     <Compile Include="Region\RegionManagerRegistrator.cs" />
     <Compile Include="Services\SkinService.cs" />
-    <Compile Include="Views\Patient\BasePatientActionMenu.cs" />
+    <Compile Include="Views\Patient\BaseActionMenu.cs" />
+    <Compile Include="Views\Patient\BaseActionMenu2.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SoftCareManager.Contracts\SoftCareManager.Contracts.csproj">

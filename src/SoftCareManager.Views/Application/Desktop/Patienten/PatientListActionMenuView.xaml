@@ -1,5 +1,5 @@
-﻿<patientBaseView:BasePatientActionMenu x:Class="SoftCareManager.Views.Application.Desktop.Patienten.PatientListActionMenuView"
-                                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<patientBaseView:BaseActionMenu2 x:Class="SoftCareManager.Views.Application.Desktop.Patienten.PatientListActionMenuView"
+                                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                 xmlns:appCommands="clr-namespace:SoftCareManager.Common.UI.Commands;assembly=SoftCareManager.Common.UI"
                                 xmlns:patientBaseView="clr-namespace:SoftCareManager.Common.UI.Views.Patient;assembly=SoftCareManager.Common.UI"
@@ -21,4 +21,4 @@
         <Button Grid.Row="0" Content="Neu" Command="{appCommands:DataContextCommandAdapter Create, CanCreate}" Margin="5,10"/>
         <Button Grid.Row="1" Content="Bearbeiten" Command="{appCommands:DataContextCommandAdapter Edit, CanEdit}" Margin="5,10" />
     </Grid>
-</patientBaseView:BasePatientActionMenu>
+</patientBaseView:BaseActionMenu2>

@@ -55,6 +55,12 @@
     <Compile Include="Application\Region\IRegion.cs" />
     <Compile Include="Application\Region\IRegionManager.cs" />
     <Compile Include="Application\Region\IRegionViewLifeTime.cs" />
+    <Compile Include="Authorization\IUser.cs" />
+    <Compile Include="Authorization\Right.cs" />
+    <Compile Include="Authorization\Role.cs" />
+    <Compile Include="Authorization\RoleRightRelation.cs" />
+    <Compile Include="Authorization\User.cs" />
+    <Compile Include="EnumExtensions.cs" />
     <Compile Include="General\EventTopics.cs" />
     <Compile Include="General\ObservableObject.cs" />
     <Compile Include="General\Regions.cs" />
@@ -73,8 +79,9 @@
     <Compile Include="Model\IAppMenuModel.cs" />
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\Patient\IPatientModel.cs" />
-    <Compile Include="Model\IsActiveModel.cs" />
     <Compile Include="Model\Patient\IPatientOverviewModel.cs" />
+    <Compile Include="Model\Therapy\IPatientTherapyOverviewModel.cs" />
+    <Compile Include="Model\Therapy\ITherapyModel.cs" />
     <Compile Include="Services\IGenericContainerService.cs" />
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\IOrderService.cs" />
@@ -94,6 +101,7 @@
     <Compile Include="WorkItems\Patient\IPatientHospitalWorkItem.cs" />
     <Compile Include="WorkItems\Patient\IPatientInsuranceWorkItem.cs" />
     <Compile Include="WorkItems\Patient\IPatientOverviewWorkItem.cs" />
+    <Compile Include="WorkItems\Patient\IPatientTherapyWorkItem.cs" />
     <Compile Include="WorkItems\View\IAppInformationWorkItem.cs" />
     <Compile Include="WorkItems\View\IAppMenuWorkItem.cs" />
     <Compile Include="WorkItems\IAppController.cs" />

@@ -1,16 +1,16 @@
-﻿using SoftCareManager.Contracts.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using SoftCareManager.Contracts.ViewModel;
 
-namespace SoftCareManager.Views.Application.Behaviors
+namespace SoftCareManager.Views.Application.Behavior
 {
     public class DataContextBehavior
     {
-        private ContentControl _shellControl;
-        private List<Lazy<UserControl>> _desktopShellViews;
-        private List<Lazy<UserControl>> _touchShellViews;
+        private readonly ContentControl _shellControl;
+        private readonly List<Lazy<UserControl>> _desktopShellViews;
+        private readonly List<Lazy<UserControl>> _touchShellViews;
         private bool _isTouch;
         private int _shellId;
 
@@ -63,7 +63,7 @@ namespace SoftCareManager.Views.Application.Behaviors
 
         private static void OnIsTouchPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            var dataContextBehavior = DataContextBehavior.GetDataContextBehavior(dependencyObject);
+            var dataContextBehavior = GetDataContextBehavior(dependencyObject);
             if (dataContextBehavior == null)
             {
                 return;
@@ -98,7 +98,7 @@ namespace SoftCareManager.Views.Application.Behaviors
         {
             var dataContextBehavior = new DataContextBehavior(dependencyObject as ContentControl);
 
-            DataContextBehavior.SetDataContextBehavior(dependencyObject, dataContextBehavior);
+            SetDataContextBehavior(dependencyObject, dataContextBehavior);
 
             dataContextBehavior.Attach();
         }

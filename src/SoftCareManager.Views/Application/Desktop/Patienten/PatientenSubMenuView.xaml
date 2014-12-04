@@ -14,6 +14,6 @@
         </Grid.ColumnDefinitions>
         <Button Grid.Column="0" Margin="5" Height="30" Command="{x:Static appCommands:ApplicationCommands.NavigateToCommand}" CommandParameter="{Binding PatientStammdatenParameter}" Content="Stammdaten"/>
         <Button Grid.Column="1" Margin="5" Height="30" Content="Dokumentation"/>
-        <Button Grid.Column="2" Margin="5" Height="30" Content="Therapiepläne"/>
+        <Button Grid.Column="2" Margin="5" Height="30" Command="{x:Static appCommands:ApplicationCommands.NavigateToCommand}" CommandParameter="{Binding PatientTherapyParameter}" Content="Therapiepläne"/>
     </Grid>
 </UserControl>

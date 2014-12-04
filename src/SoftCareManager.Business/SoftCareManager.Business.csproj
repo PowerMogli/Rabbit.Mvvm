@@ -54,14 +54,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Patient\PatientModel.cs" />
+    <Compile Include="Model\Therapy\TherapyModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Application\NavigationProxy.cs" />
     <Compile Include="Services\Application\NavigationService.cs" />
     <Compile Include="Services\Patient\PatientProvider.cs" />
     <Compile Include="Services\ServiceProvider.cs" />
+    <Compile Include="WorkItems\NullWorkItem.cs" />
     <Compile Include="WorkItems\Patient\PatientHospitalWorkItem.cs" />
     <Compile Include="WorkItems\Patient\PatientInsuranceWorkItem.cs" />
     <Compile Include="WorkItems\Patient\PatientOverviewWorkItem.cs" />
+    <Compile Include="WorkItems\Patient\PatientTherapyWorkItem.cs" />
     <Compile Include="WorkItems\View\AppInformationWorkItem.cs" />
     <Compile Include="WorkItems\View\AppMenuWorkItem.cs" />
     <Compile Include="WorkItems\AppController.cs" />

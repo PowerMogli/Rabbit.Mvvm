@@ -58,6 +58,7 @@
     <Compile Include="Application\AppInformationViewModel.cs" />
     <Compile Include="Application\AppShellMenuViewModel.cs" />
     <Compile Include="Application\AppShellSwitch.cs" />
+    <Compile Include="ModelExtension.cs" />
     <Compile Include="Patient\PatientListActionMenuViewModel.cs" />
     <Compile Include="Patient\PatientListOverviewViewModel.cs" />
     <Compile Include="Patient\PatientStammdatenViewModel.cs" />
@@ -67,6 +68,9 @@
     <Compile Include="Application\AppMenuViewModel.cs" />
     <Compile Include="Application\AppShellContainerViewModel.cs" />
     <Compile Include="Application\AppShellViewModel.cs" />
+    <Compile Include="Therapy\PatientTherapyActionMenuViewModel.cs" />
+    <Compile Include="Therapy\PatientTherapyListOverviewViewModel.cs" />
+    <Compile Include="Therapy\TherapyViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SoftCareManager.Business\SoftCareManager.Business.csproj">

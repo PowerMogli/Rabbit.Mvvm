@@ -4,21 +4,21 @@ using System.Windows;
 
 namespace SoftCareManager.Common.UI.Groups.Selection
 {
-    [Export(typeof(ISelectionGroupManager))]
-    public class SelectionGroupManager : BaseGroupManager<SelectionGroup, SelectionGroupSource>, ISelectionGroupManager
+    [Export(typeof(IBaseGroupManager<SelectionGroup, SelectionGroupSource>))]
+    public class SelectionGroupManager : BaseGroupManager<SelectionGroup, SelectionGroupSource>
     {
-        public static ISelectionGroupManager GetSelectionGroupManager(DependencyObject obj)
+        public static IBaseGroupManager<SelectionGroup, SelectionGroupSource> GetSelectionGroupManager(DependencyObject obj)
         {
-            return (ISelectionGroupManager)obj.GetValue(SelectionGroupManagerProperty);
+            return (IBaseGroupManager<SelectionGroup, SelectionGroupSource>)obj.GetValue(SelectionGroupManagerProperty);
         }
 
-        public static void SetSelectionGroupManager(DependencyObject obj, ISelectionGroupManager value)
+        public static void SetSelectionGroupManager(DependencyObject obj, IBaseGroupManager<SelectionGroup, SelectionGroupSource> value)
         {
             obj.SetValue(SelectionGroupManagerProperty, value);
         }
 
         public static readonly DependencyProperty SelectionGroupManagerProperty =
-            DependencyProperty.RegisterAttached("SelectionGroupManager", typeof(ISelectionGroupManager), typeof(SelectionGroupManager), new PropertyMetadata(null));
+            DependencyProperty.RegisterAttached("SelectionGroupManager", typeof(IBaseGroupManager<SelectionGroup, SelectionGroupSource>), typeof(SelectionGroupManager), new PropertyMetadata(null));
 
         public static string GetSelectionGroupName(DependencyObject obj)
         {
@@ -35,10 +35,10 @@ namespace SoftCareManager.Common.UI.Groups.Selection
 
         private static void OnSelectionGroupNamePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            var selectionGroupManager = GetSelectionGroupManager(Application.Current.MainWindow);
-            var selectionGroup = selectionGroupManager.AddSubscriber(e.NewValue as string, dependencyObject);
+            var groupManager = GetSelectionGroupManager(Application.Current.MainWindow);
+            var group = groupManager.AddSubscriber(e.NewValue as string, dependencyObject);
 
-            selectionGroup.Bind();
+            group.Bind();
         }
 
         public static SelectionGroupSource GetSelectionGroupSource(DependencyObject obj)
@@ -62,10 +62,10 @@ namespace SoftCareManager.Common.UI.Groups.Selection
                 return;
             }
 
-            var selectionGroupManager = GetSelectionGroupManager(Application.Current.MainWindow);
-            var selectionGroup = selectionGroupManager.AddPublisher(selectionGroupSource);
+            var groupManager = GetSelectionGroupManager(Application.Current.MainWindow);
+            var group = groupManager.AddPublisher(selectionGroupSource);
 
-            selectionGroup.Bind();
+            group.Bind();
         }
     }
 }

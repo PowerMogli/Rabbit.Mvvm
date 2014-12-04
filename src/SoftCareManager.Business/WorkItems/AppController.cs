@@ -14,19 +14,19 @@ namespace SoftCareManager.Business.WorkItems
     [Export(typeof(IAppController))]
     public class AppController : IAppController
     {
-        private readonly Service.IServiceProvider serviceProvider;
+        private readonly Service.IServiceProvider _serviceProvider;
 
-        private readonly IWorkItemProvider workItemProvider;
+        private readonly IWorkItemProvider _workItemProvider;
 
-        private IEventBroker eventBroker;
+        private IEventBroker _eventBroker;
 
-        private readonly IObjectBuilder objectBuilder;
+        private readonly IObjectBuilder _objectBuilder;
 
         // Property injection - daher weiterhin testbar!
         public IEventBroker EventBroker
         {
-            get { return eventBroker ?? (eventBroker = new EventBroker()); }
-            set { eventBroker = value; }
+            get { return _eventBroker ?? (_eventBroker = new EventBroker()); }
+            set { _eventBroker = value; }
         }
 
         [EventPublication(EventTopics.AppControllerInitialized)]
@@ -35,9 +35,9 @@ namespace SoftCareManager.Business.WorkItems
         [ImportingConstructor]
         public AppController(Service.IServiceProvider serviceProvider, IWorkItemProvider workItemProvider, IObjectBuilder objectBuilder)
         {
-            this.serviceProvider = serviceProvider;
-            this.workItemProvider = workItemProvider;
-            this.objectBuilder = objectBuilder;
+            _serviceProvider = serviceProvider;
+            _workItemProvider = workItemProvider;
+            _objectBuilder = objectBuilder;
 
             RegisterOnEventBroker(this);
         }
@@ -61,16 +61,16 @@ namespace SoftCareManager.Business.WorkItems
         public TService GetService<TService>()
             where TService : IService
         {
-            var service = serviceProvider.GetService<TService>();
-            eventBroker.Register(service);
+            var service = _serviceProvider.GetService<TService>();
+            EventBroker.Register(service);
 
             return service;
         }
 
         public object GetService(Type serviceType)
         {
-            var service = serviceProvider.GetService(serviceType);
-            eventBroker.Register(service);
+            var service = _serviceProvider.GetService(serviceType);
+            EventBroker.Register(service);
 
             return service;
         }
@@ -78,20 +78,24 @@ namespace SoftCareManager.Business.WorkItems
         public TWorkItem GetWorkItem<TWorkItem>()
             where TWorkItem : IWorkItem
         {
-            var workItem = workItemProvider.Get<TWorkItem>();
+            var workItem = _workItemProvider.Get<TWorkItem>();
             workItem.RootWorkItem = this;
 
-            eventBroker.Register(workItem);
+            EventBroker.Register(workItem);
 
             return workItem;
         }
 
         public object GetWorkItem(Type workItemType)
         {
-            var workItem = workItemProvider.Get(workItemType) as IWorkItem;
-            workItem.RootWorkItem = this;
+            var workItem = _workItemProvider.Get(workItemType) as IWorkItem;
+            if (workItem == null)
+            {
+                return new NullWorkItem();
+            }
 
-            eventBroker.Register(workItem);
+            workItem.RootWorkItem = this;
+            EventBroker.Register(workItem);
 
             return workItem;
         }
@@ -108,7 +112,7 @@ namespace SoftCareManager.Business.WorkItems
 
         public ViewModelBase BuildViewModel(Type viewModelType)
         {
-            return objectBuilder.Build(viewModelType, this) as ViewModelBase;
+            return _objectBuilder.Build(viewModelType, this) as ViewModelBase;
         }
     }
 }

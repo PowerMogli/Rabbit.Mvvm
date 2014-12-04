@@ -1,23 +1,23 @@
-﻿using SoftCareManager.Contracts.Groups.Base;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
+using SoftCareManager.Contracts.Groups.Base;
 
 namespace SoftCareManager.Common.UI.Groups.Base
 {
     public abstract class BaseGroupManager<TGroup, TGroupSource> : IBaseGroupManager<TGroup, TGroupSource>
-        where TGroup : IGroup, new()
+        where TGroup : class, IGroup, new()
         where TGroupSource : IGroupSource
     {
-        private IDictionary<string, TGroup> _groups;
+        private readonly IDictionary<string, TGroup> _groups;
 
-        public BaseGroupManager()
+        protected BaseGroupManager()
         {
             _groups = new Dictionary<string, TGroup>();
         }
 
         public TGroup AddSubscriber(string groupName, DependencyObject dependencyObject)
         {
-            TGroup group = GetGroup(groupName);
+            var group = GetGroup(groupName);
 
             group = AddGroup(groupName, group);
 
@@ -28,7 +28,7 @@ namespace SoftCareManager.Common.UI.Groups.Base
 
         public TGroup AddPublisher(TGroupSource groupSource)
         {
-            TGroup group = GetGroup(groupSource.GroupName);
+            var group = GetGroup(groupSource.GroupName);
 
             group = AddGroup(groupSource.GroupName, group);
 
@@ -39,20 +39,18 @@ namespace SoftCareManager.Common.UI.Groups.Base
 
         private TGroup AddGroup(string groupName, TGroup group)
         {
-            if (group == null)
-            {
-                group = new TGroup();
-                group.Name = groupName;
+            if (@group != null) return @group;
 
-                _groups.Add(groupName, group);
-            }
+            @group = new TGroup { Name = groupName };
+
+            _groups.Add(groupName, @group);
 
             return group;
         }
 
         private TGroup GetGroup(string groupName)
         {
-            TGroup group = default(TGroup);
+            var group = default(TGroup);
 
             if (_groups.ContainsKey(groupName))
             {

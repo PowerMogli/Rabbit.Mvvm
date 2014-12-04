@@ -126,6 +126,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Application\Desktop\Therapy\PatientTherapiesActionMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Application\Desktop\Therapy\PatientTherapiesOverviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Application\Touch\AppInformationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -161,6 +169,12 @@
     </Compile>
     <Compile Include="Application\AppShellContainerView.xaml.cs">
       <DependentUpon>AppShellContainerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Application\Desktop\Therapy\PatientTherapiesActionMenuView.xaml.cs">
+      <DependentUpon>PatientTherapiesActionMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Application\Desktop\Therapy\PatientTherapiesOverviewView.xaml.cs">
+      <DependentUpon>PatientTherapiesOverviewView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Application\Touch\AppInformationView.xaml.cs">
       <DependentUpon>AppInformationView.xaml</DependentUpon>

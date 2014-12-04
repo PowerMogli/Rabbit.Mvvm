@@ -10,37 +10,43 @@ using System.Reflection;
 
 namespace SoftCareManager.Common
 {
-    delegate T ObjectActivator<T>(params object[] args);
-
     delegate object ObjectActivator(params object[] args);
 
     [Export(typeof(IObjectBuilder))]
     public class ObjectBuilder : IObjectBuilder
     {
-        private IDictionary<Type, Expression<ObjectActivator>> objectFactories;
+        private readonly IDictionary<Type, ObjectCreationInfo> _objectCreationInfos;
 
         public ObjectBuilder()
         {
-            objectFactories = new Dictionary<Type, Expression<ObjectActivator>>();
+            _objectCreationInfos = new Dictionary<Type, ObjectCreationInfo>();
         }
 
         public object Build(Type typeToBuild, IAppController appController)
         {
-            ConstructorInfo ctor = typeToBuild.GetConstructors().First();
-            ObjectActivator createdActivator = (ObjectActivator)GetActivator<ObjectActivator>(ctor);
+            ObjectCreationInfo creationInfo;
 
-            return createdActivator(GetParameter(ctor, appController));
+            if (_objectCreationInfos.TryGetValue(typeToBuild, out creationInfo))
+            {
+                return creationInfo.InvokeActivator();
+            }
+
+            creationInfo = CreateCreationInfo(typeToBuild, appController);
+            _objectCreationInfos.Add(typeToBuild, creationInfo);
+
+            return creationInfo.InvokeActivator();
         }
 
-        public T Build<T>(IAppController appController)
+        private static ObjectCreationInfo CreateCreationInfo(Type typeToBuild, IAppController appController)
         {
-            ConstructorInfo ctor = typeof(T).GetConstructors().First();
-            ObjectActivator<T> createdActivator = (ObjectActivator<T>)GetActivator<ObjectActivator<T>>(ctor);
+            var ctor = typeToBuild.GetConstructors().First();
+            var createdActivator = (ObjectActivator)GetActivator<ObjectActivator>(ctor);
+            var parameter = GetParameter(ctor, appController);
 
-            return createdActivator(GetParameter(ctor, appController));
+            return new ObjectCreationInfo(createdActivator, parameter);
         }
 
-        private object[] GetParameter(ConstructorInfo ctor, IAppController appController)
+        private static object[] GetParameter(ConstructorInfo ctor, IAppController appController)
         {
             var parameterInfos = ctor.GetParameters();
             object[] args = new object[parameterInfos.Length];

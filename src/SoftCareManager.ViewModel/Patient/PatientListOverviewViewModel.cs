@@ -12,13 +12,14 @@ using System.Threading.Tasks;
 
 namespace SoftCareManager.ViewModel.Patient
 {
-    public class PatientListOverviewViewModel : ViewModelBase, IPatientOverviewModel, ISelectionPublisher, IItemsPublisher
+    public class PatientListOverviewViewModel : ViewModelBase, IPatientOverviewModel, ISelectionPublisher<IPatientModel>, IItemsPublisher
     {
-        private IAppController _appController;
-        private IPatientOverviewWorkItem patientOverviewWorkItem;
+        private readonly IAppController _appController;
+        private readonly IPatientOverviewWorkItem _patientOverviewWorkItem;
+        private bool _loadedPatients;
 
-        private object _selectedItem;
-        public object SelectedItem
+        private IPatientModel _selectedItem;
+        public IPatientModel SelectedItem
         {
             get { return _selectedItem; }
             set
@@ -39,6 +40,7 @@ namespace SoftCareManager.ViewModel.Patient
             {
                 _patients = value;
                 RaisePropertyChanged();
+                Items = Patients.Cast();
             }
         }
 
@@ -56,14 +58,17 @@ namespace SoftCareManager.ViewModel.Patient
         {
             _appController = appController;
             CanBeActivated = true;
-            patientOverviewWorkItem = appController.GetWorkItem<IPatientOverviewWorkItem>();
+            _patientOverviewWorkItem = appController.GetWorkItem<IPatientOverviewWorkItem>();
         }
 
         public override void Initialize(Contracts.Application.Navigation.INavigationParameter navigationParameter)
         {
             base.Initialize(navigationParameter);
 
-            LoadPatients();
+            if (_loadedPatients == false)
+            {
+                LoadPatients();
+            }
         }
 
         private async void LoadPatients()
@@ -71,8 +76,9 @@ namespace SoftCareManager.ViewModel.Patient
             await Task.Delay(2000);
             await Task.Run(() =>
             {
-                var patientViewModels = MapModel(patientOverviewWorkItem.GetPatients("naip:Berlin"));
+                var patientViewModels = MapModel(_patientOverviewWorkItem.GetPatients("naip:Berlin"));
                 Patients = new ObservableCollection<IPatientModel>(patientViewModels);
+                _loadedPatients = true;
             });
         }
 
@@ -82,7 +88,11 @@ namespace SoftCareManager.ViewModel.Patient
 
             foreach (var patientModel in patientModels)
             {
-                var patientViewModel = new PatientViewModel(new PatientArticleWorkItem(_appController), new PatientHospitalWorkItem(_appController), new PatientInsuranceWorkItem(_appController))
+                var patientViewModel = new PatientViewModel(
+                    new PatientArticleWorkItem(_appController),
+                    new PatientHospitalWorkItem(_appController),
+                    new PatientInsuranceWorkItem(_appController),
+                    new PatientTherapyWorkItem())
                 {
                     Id = patientModel.Id,
                     LastName = patientModel.LastName,
@@ -96,12 +106,13 @@ namespace SoftCareManager.ViewModel.Patient
             return patientViewModels;
         }
 
-        public IEnumerable<object> Items
+        private ObservableCollection<object> _items;
+        public ObservableCollection<object> Items
         {
-            get { return _patients; }
+            get { return _items; }
             set
             {
-                //_patients = value;
+                _items = value;
                 RaisePropertyChanged();
             }
         }

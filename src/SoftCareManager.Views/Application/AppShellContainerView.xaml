@@ -2,9 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:appCommands="clr-namespace:SoftCareManager.Common.UI.Commands;assembly=SoftCareManager.Common.UI"
-        xmlns:behavior="clr-namespace:SoftCareManager.Views.Application.Behaviors"
         xmlns:rm="clr-namespace:SoftCareManager.Common.UI.Region;assembly=SoftCareManager.Common.UI"
         xmlns:regions="clr-namespace:SoftCareManager.Contracts.General;assembly=SoftCareManager.Contracts"
+        xmlns:behavior="clr-namespace:SoftCareManager.Views.Application.Behavior"
         Title="SoftCareManager" 
         Height="350" 
         Width="525">

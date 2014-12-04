@@ -14,16 +14,22 @@ namespace SoftCareManager.Contracts.General
                 return;
             }
 
-            var oldValue = instanceField;
             instanceField = newValue;
 
             var propertyName = GetPropertyName(expression);
             RaisePropertyChanged(propertyName);
         }
 
+        protected void RaisePropertyChanged<T>(Expression<Func<T>> propertyLambda)
+        {
+            var propertyName = GetPropertyName(propertyLambda);
+
+            if (propertyName != null) RaisePropertyChanged(propertyName);
+        }
+
         protected void RaisePropertyChanged([CallerMemberName]string propertyName = "")
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
 
             if (handler != null)
             {
@@ -31,16 +37,16 @@ namespace SoftCareManager.Contracts.General
             }
         }
 
-        private string GetPropertyName<T>(Expression<Func<T>> propertyLambda)
+        private static string GetPropertyName<T>(Expression<Func<T>> propertyLambda)
         {
-            var me = propertyLambda.Body as MemberExpression;
+            var memberExpression = propertyLambda.Body as MemberExpression;
 
-            if (me == null)
+            if (memberExpression == null)
             {
                 throw new ArgumentException("You must pass a lambda of the form: '() => Class.Property' or '() => object.Property'");
             }
 
-            return me.Member.Name;
+            return memberExpression.Member.Name;
         }
 
         #region INotifyPropertyChanged Members

@@ -24,7 +24,7 @@ namespace SoftCareManager.Business.Services
         public object Get(Type workItemType)
         {
             var lazyWorkItem = (from workItem in WorkItems
-                                where workItem.Metadata.WorkItemType.Equals(workItemType)
+                                where workItem.Metadata.WorkItemType == workItemType
                                 select workItem).FirstOrDefault();
 
             return lazyWorkItem.Value;

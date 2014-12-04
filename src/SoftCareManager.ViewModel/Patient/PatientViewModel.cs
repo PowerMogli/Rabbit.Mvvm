@@ -1,16 +1,18 @@
 ﻿using SoftCareManager.Contracts.Model.Patient;
+using SoftCareManager.Contracts.Model.Therapy;
 using SoftCareManager.Contracts.ViewModel;
-using SoftCareManager.Contracts.WorkItems;
 using SoftCareManager.Contracts.WorkItems.Patient;
 using System;
+using System.Collections.ObjectModel;
 
 namespace SoftCareManager.ViewModel.Patient
 {
     public class PatientViewModel : ViewModelBase, IPatientModel
     {
-        private IPatientArticleWorkItem patientArticleWorkItem;
-        private IPatientHospitalWorkItem patientHospitalWorkItem;
-        private IPatientInsuranceWorkItem patientInsuranceWorkItem;
+        private IPatientArticleWorkItem _patientArticleWorkItem;
+        private IPatientHospitalWorkItem _patientHospitalWorkItem;
+        private IPatientInsuranceWorkItem _patientInsuranceWorkItem;
+        private readonly IPatientTherapyWorkItem _patientTherapyWorkItem;
 
         public Guid? Id { get; set; }
 
@@ -45,11 +47,24 @@ namespace SoftCareManager.ViewModel.Patient
             }
         }
 
-        public PatientViewModel(IPatientArticleWorkItem patientArticleWorkItem, IPatientHospitalWorkItem patientHospitalWorkItem, IPatientInsuranceWorkItem patientInsuranceWorkItem)
+        public PatientViewModel(IPatientArticleWorkItem patientArticleWorkItem,
+            IPatientHospitalWorkItem patientHospitalWorkItem,
+            IPatientInsuranceWorkItem patientInsuranceWorkItem,
+            IPatientTherapyWorkItem patientTherapyWorkItem)
         {
-            this.patientArticleWorkItem = patientArticleWorkItem;
-            this.patientHospitalWorkItem = patientHospitalWorkItem;
-            this.patientInsuranceWorkItem = patientInsuranceWorkItem;
+            _patientArticleWorkItem = patientArticleWorkItem;
+            _patientHospitalWorkItem = patientHospitalWorkItem;
+            _patientInsuranceWorkItem = patientInsuranceWorkItem;
+            _patientTherapyWorkItem = patientTherapyWorkItem;
+
+            LoadTherapies();
         }
+
+        private void LoadTherapies()
+        {
+            Therapies = _patientTherapyWorkItem.LoadTherapies(Id);
+        }
+
+        public ObservableCollection<ITherapyModel> Therapies { get; set; }
     }
 }

@@ -18,6 +18,8 @@
 
         public const string PatientOverviewWorkItem = "IPatientOverviewWorkItem";
 
+        public const string PatientTherapyWorkItem = "PatientTherapyWorkItem";
+
         #endregion
 
         #region AppView

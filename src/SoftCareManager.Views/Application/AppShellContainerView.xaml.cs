@@ -1,12 +1,13 @@
-﻿using SoftCareManager.Common.UI.Groups.Items;
+﻿using System.ComponentModel.Composition;
+using System.Windows;
+using SoftCareManager.Common.UI.Groups.Base;
+using SoftCareManager.Common.UI.Groups.Items;
 using SoftCareManager.Common.UI.Groups.Selection;
 using SoftCareManager.Common.UI.Region;
 using SoftCareManager.Common.UI.Services;
 using SoftCareManager.Contracts.Application.Region;
 using SoftCareManager.Contracts.WorkItems;
 using SoftCareManager.ViewModel.Application;
-using System.ComponentModel.Composition;
-using System.Windows;
 
 namespace SoftCareManager.Views.Application
 {
@@ -17,11 +18,11 @@ namespace SoftCareManager.Views.Application
     public partial class AppShellContainerView : IPartImportsSatisfiedNotification
     {
         private readonly IRegionManager _regionManager;
-        private readonly ISelectionGroupManager _selectionGroupManager;
-        private readonly IItemsGroupManager _itemsGroupManager;
+        private readonly IBaseGroupManager<SelectionGroup, SelectionGroupSource> _selectionGroupManager;
+        private readonly IBaseGroupManager<ItemsGroup, ItemsGroupSource> _itemsGroupManager;
 
         [ImportingConstructor]
-        public AppShellContainerView(IRegionManager regionManager, ISelectionGroupManager selectionGroupManager, IItemsGroupManager itemsGroupManager, IAppController appController)
+        public AppShellContainerView(IRegionManager regionManager, IBaseGroupManager<SelectionGroup, SelectionGroupSource> selectionGroupManager, IBaseGroupManager<ItemsGroup, ItemsGroupSource> itemsGroupManager, IAppController appController)
         {
             InitializeComponent();
 

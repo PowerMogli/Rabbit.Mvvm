@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SoftCareManager.Contracts.Model.Therapy;
+using System;
+using System.Collections.ObjectModel;
 
 namespace SoftCareManager.Contracts.Model.Patient
 {
@@ -9,5 +11,7 @@ namespace SoftCareManager.Contracts.Model.Patient
         string FirstName { get; set; }
 
         DateTime Birthday { get; set; }
+
+        ObservableCollection<ITherapyModel> Therapies { get; set; }
     }
 }
