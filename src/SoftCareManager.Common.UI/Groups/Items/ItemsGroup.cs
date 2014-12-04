@@ -13,31 +13,31 @@ namespace SoftCareManager.Common.UI.Groups.Items
 
         public string Name { get; set; }
 
-        public DependencyObject ItemsSubscriber { get; set; }
+        private DependencyObject _itemsSubscriber;
 
-        public IItemsPublisher ItemsPublisher { get; set; }
+        private IItemsPublisher _itemsPublisher;
 
         public void Bind()
         {
-            if (ItemsSubscriber == null || ItemsPublisher == null)
+            if (_itemsSubscriber == null || _itemsPublisher == null)
             {
                 return;
             }
 
-            BindingOperations.ClearBinding(ItemsSubscriber, BaseActionMenu2.ItemsProperty);
-            BindingOperations.SetBinding(ItemsSubscriber, BaseActionMenu2.ItemsProperty, new Binding(BindingPath)
+            BindingOperations.ClearBinding(_itemsSubscriber, BaseActionMenu2.ItemsProperty);
+            BindingOperations.SetBinding(_itemsSubscriber, BaseActionMenu2.ItemsProperty, new Binding(BindingPath)
             {
-                Source = ItemsPublisher,
+                Source = _itemsPublisher,
                 Mode = BindingMode.OneWay,
             });
         }
 
         public void AddSubscriber(DependencyObject dependencyObject)
         {
-            IItemsSubscriber selectionSubscriber = dependencyObject as IItemsSubscriber;
-            if (selectionSubscriber != null)
+            IItemsSubscriber subscriber = dependencyObject as IItemsSubscriber;
+            if (subscriber != null)
             {
-                ItemsSubscriber = dependencyObject;
+                _itemsSubscriber = dependencyObject;
             }
         }
 
@@ -50,7 +50,7 @@ namespace SoftCareManager.Common.UI.Groups.Items
                 return;
             }
 
-            ItemsPublisher = itemsGroupSource.ItemsPublisher;
+            _itemsPublisher = itemsGroupSource.ItemsPublisher;
         }
     }
 }
