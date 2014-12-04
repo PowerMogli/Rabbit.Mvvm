@@ -13,31 +13,31 @@ namespace SoftCareManager.Common.UI.Groups.Selection
 
         public string Name { get; set; }
 
-        public DependencyObject SelectionSubscriber { get; set; }
+        private DependencyObject _selectionSubscriber;
 
-        public ISelectionPublisher SelectionPublisher { get; set; }
+        private ISelectionPublisher _selectionPublisher;
 
         public void Bind()
         {
-            if (SelectionPublisher == null
-                || SelectionSubscriber == null)
+            if (_selectionPublisher == null
+                || _selectionSubscriber == null)
             {
                 return;
             }
 
-            BindingOperations.SetBinding(SelectionSubscriber, BaseActionMenu2.SelectedItemProperty, new Binding(BindingPath)
+            BindingOperations.SetBinding(_selectionSubscriber, BaseActionMenu2.SelectedItemProperty, new Binding(BindingPath)
             {
-                Source = SelectionPublisher,
+                Source = _selectionPublisher,
                 Mode = BindingMode.OneWay
             });
         }
 
         public void AddSubscriber(DependencyObject dependencyObject)
         {
-            ISelectionSubscriber selectionSubscriber = dependencyObject as ISelectionSubscriber;
-            if (selectionSubscriber != null)
+            ISelectionSubscriber subscriber = dependencyObject as ISelectionSubscriber;
+            if (subscriber != null)
             {
-                SelectionSubscriber = dependencyObject;
+                _selectionSubscriber = dependencyObject;
             }
         }
 
@@ -50,7 +50,7 @@ namespace SoftCareManager.Common.UI.Groups.Selection
                 return;
             }
 
-            SelectionPublisher = selectionGroupSource.SelectionPublisher;
+            _selectionPublisher = selectionGroupSource.SelectionPublisher;
         }
     }
 }
