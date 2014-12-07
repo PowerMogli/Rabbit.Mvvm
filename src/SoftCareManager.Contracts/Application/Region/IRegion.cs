@@ -1,5 +1,6 @@
-﻿using SoftCareManager.Contracts.ViewModel;
-using System;
+﻿using System;
+
+using SoftCareManager.Contracts.ViewModel;
 
 namespace SoftCareManager.Contracts.Application.Region
 {

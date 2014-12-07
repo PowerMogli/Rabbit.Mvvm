@@ -2,14 +2,25 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+
 using SoftCareManager.Contracts.ViewModel;
+using SoftCareManager.Views.Application.Desktop;
 
 namespace SoftCareManager.Views.Application.Behavior
 {
     public class DataContextBehavior
     {
-        private readonly ContentControl _shellControl;
+        public static readonly DependencyProperty DataContextBehaviorProperty =
+            DependencyProperty.RegisterAttached("DataContextBehavior", typeof (DataContextBehavior), typeof (DataContextBehavior), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty IsTouchProperty =
+            DependencyProperty.RegisterAttached("IsTouch", typeof (bool), typeof (DataContextBehavior), new PropertyMetadata(false, OnIsTouchPropertyChanged));
+
+        public static readonly DependencyProperty MonitorShellProperty =
+            DependencyProperty.RegisterAttached("MonitorShell", typeof (bool), typeof (DataContextBehavior), new PropertyMetadata(false, OnMonitorShellPropertyChanged));
+
         private readonly List<Lazy<UserControl>> _desktopShellViews;
+        private readonly ContentControl _shellControl;
         private readonly List<Lazy<UserControl>> _touchShellViews;
         private bool _isTouch;
         private int _shellId;
@@ -20,9 +31,9 @@ namespace SoftCareManager.Views.Application.Behavior
 
             _desktopShellViews = new List<Lazy<UserControl>>
             {
-                new Lazy<UserControl>(() => new Desktop.AppShellView()),
-                new Lazy<UserControl>(() => new Desktop.AppShellView()),
-                new Lazy<UserControl>(() => new Desktop.AppShellView())
+                new Lazy<UserControl>(() => new AppShellView()),
+                new Lazy<UserControl>(() => new AppShellView()),
+                new Lazy<UserControl>(() => new AppShellView())
             };
 
             _touchShellViews = new List<Lazy<UserControl>>
@@ -38,18 +49,19 @@ namespace SoftCareManager.Views.Application.Behavior
             return (DataContextBehavior)obj.GetValue(DataContextBehaviorProperty);
         }
 
-        public static void SetDataContextBehavior(DependencyObject obj, DataContextBehavior value)
-        {
-            obj.SetValue(DataContextBehaviorProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for DataContextBehavior.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty DataContextBehaviorProperty =
-            DependencyProperty.RegisterAttached("DataContextBehavior", typeof(DataContextBehavior), typeof(DataContextBehavior), new PropertyMetadata(null));
-
         public static bool GetIsTouch(DependencyObject obj)
         {
             return (bool)obj.GetValue(IsTouchProperty);
+        }
+
+        public static bool GetMonitorShell(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(MonitorShellProperty);
+        }
+
+        public static void SetDataContextBehavior(DependencyObject obj, DataContextBehavior value)
+        {
+            obj.SetValue(DataContextBehaviorProperty, value);
         }
 
         public static void SetIsTouch(DependencyObject obj, bool value)
@@ -57,13 +69,14 @@ namespace SoftCareManager.Views.Application.Behavior
             obj.SetValue(IsTouchProperty, value);
         }
 
-        // Using a DependencyProperty as the backing store for IsTouch.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsTouchProperty =
-            DependencyProperty.RegisterAttached("IsTouch", typeof(bool), typeof(DataContextBehavior), new PropertyMetadata(false, OnIsTouchPropertyChanged));
+        public static void SetMonitorShell(DependencyObject obj, bool value)
+        {
+            obj.SetValue(MonitorShellProperty, value);
+        }
 
         private static void OnIsTouchPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            var dataContextBehavior = GetDataContextBehavior(dependencyObject);
+            DataContextBehavior dataContextBehavior = GetDataContextBehavior(dependencyObject);
             if (dataContextBehavior == null)
             {
                 return;
@@ -73,30 +86,11 @@ namespace SoftCareManager.Views.Application.Behavior
             dataContextBehavior.SetContent();
         }
 
-        private void SetContent()
-        {
-            _shellControl.Content = _isTouch
-                ? _touchShellViews[_shellId].Value
-                : _desktopShellViews[_shellId].Value;
-        }
-
-        public static bool GetMonitorShell(DependencyObject obj)
-        {
-            return (bool)obj.GetValue(MonitorShellProperty);
-        }
-
-        public static void SetMonitorShell(DependencyObject obj, bool value)
-        {
-            obj.SetValue(MonitorShellProperty, value);
-        }
-
         // Using a DependencyProperty as the backing store for MonitorShell.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MonitorShellProperty =
-            DependencyProperty.RegisterAttached("MonitorShell", typeof(bool), typeof(DataContextBehavior), new PropertyMetadata(false, OnMonitorShellPropertyChanged));
 
         private static void OnMonitorShellPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            var dataContextBehavior = new DataContextBehavior(dependencyObject as ContentControl);
+            DataContextBehavior dataContextBehavior = new DataContextBehavior(dependencyObject as ContentControl);
 
             SetDataContextBehavior(dependencyObject, dataContextBehavior);
 
@@ -111,7 +105,7 @@ namespace SoftCareManager.Views.Application.Behavior
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            var shellAware = e.NewValue as IShellAware;
+            IShellAware shellAware = e.NewValue as IShellAware;
             if (shellAware == null)
             {
                 return;
@@ -120,6 +114,13 @@ namespace SoftCareManager.Views.Application.Behavior
             _shellId = shellAware.ShellId;
 
             SetContent();
+        }
+
+        private void SetContent()
+        {
+            _shellControl.Content = _isTouch
+                ? _touchShellViews[_shellId].Value
+                : _desktopShellViews[_shellId].Value;
         }
     }
 }

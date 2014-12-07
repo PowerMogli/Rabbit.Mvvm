@@ -29,12 +29,15 @@ namespace SoftCareManager.Common.UI.Commands
         // If we accessed the CommandBindings property directly, we would cause the CommandBindings
         // collection to become instanciated on every element up the heirarchy until we reached
         // an element handling the command.
-        private static readonly CommandBindingsProvider<UIElement> UIElementCommandBindingsProvider
-            = new CommandBindingsProvider<UIElement>();
-        private static readonly CommandBindingsProvider<UIElement3D> UIElement3DCommandBindingsProvider
-            = new CommandBindingsProvider<UIElement3D>();
+
         private static readonly CommandBindingsProvider<ContentElement> ContentElementCommandBindingsProvider
             = new CommandBindingsProvider<ContentElement>();
+
+        private static readonly CommandBindingsProvider<UIElement3D> UiElement3DCommandBindingsProvider
+            = new CommandBindingsProvider<UIElement3D>();
+
+        private static readonly CommandBindingsProvider<UIElement> UiElementCommandBindingsProvider
+            = new CommandBindingsProvider<UIElement>();
 
         /// <summary>
         ///     The RoutedCommandBinding class calls this method inside its static constructor in
@@ -43,31 +46,9 @@ namespace SoftCareManager.Common.UI.Commands
         /// </summary>
         internal static void Init()
         {
-            RegisterClassHandlers(typeof(UIElement));
-            RegisterClassHandlers(typeof(UIElement3D));
-            RegisterClassHandlers(typeof(ContentElement));
-        }
-
-        private static void RegisterClassHandlers(Type type)
-        {
-            //
-            // Register handlers to listen for the RoutedEvents of RoutedCommands so that
-            // we can look for RoutedCommandBinding when the command/event fires.
-            // Although using the RegisterClassHandler method is generally frowned upon due
-            // to memory leak concerns (i.e. there is not UnregisterClassHandler), it is ok here
-            // because the 4 handlers are only referenced by the RoutedCommandBinding type.
-
-            EventManager.RegisterClassHandler(type, CommandManager.PreviewCanExecuteEvent,
-                new CanExecuteRoutedEventHandler(OnCommandCanExecute), true);
-
-            EventManager.RegisterClassHandler(type, CommandManager.CanExecuteEvent,
-                new CanExecuteRoutedEventHandler(OnCommandCanExecute), true);
-
-            EventManager.RegisterClassHandler(type, CommandManager.PreviewExecutedEvent,
-                new ExecutedRoutedEventHandler(OnCommandExecuted), true);
-
-            EventManager.RegisterClassHandler(type, CommandManager.ExecutedEvent,
-                new ExecutedRoutedEventHandler(OnCommandExecuted), true);
+            RegisterClassHandlers(typeof (UIElement));
+            RegisterClassHandlers(typeof (UIElement3D));
+            RegisterClassHandlers(typeof (ContentElement));
         }
 
         private static void OnCommandCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -80,24 +61,52 @@ namespace SoftCareManager.Common.UI.Commands
             TryExecuteRoutedCommandBinding(e.Command, sender, e);
         }
 
+        private static void RegisterClassHandlers(Type type)
+        {
+            //
+            // Register handlers to listen for the RoutedEvents of RoutedCommands so that
+            // we can look for RoutedCommandBinding when the command/event fires.
+            // Although using the RegisterClassHandler method is generally frowned upon due
+            // to memory leak concerns (i.e. there is not UnregisterClassHandler), it is ok here
+            // because the 4 handlers are only referenced by the RoutedCommandBinding type.
+
+            EventManager.RegisterClassHandler(type, CommandManager.PreviewCanExecuteEvent,
+                                              new CanExecuteRoutedEventHandler(OnCommandCanExecute), true);
+
+            EventManager.RegisterClassHandler(type, CommandManager.CanExecuteEvent,
+                                              new CanExecuteRoutedEventHandler(OnCommandCanExecute), true);
+
+            EventManager.RegisterClassHandler(type, CommandManager.PreviewExecutedEvent,
+                                              new ExecutedRoutedEventHandler(OnCommandExecuted), true);
+
+            EventManager.RegisterClassHandler(type, CommandManager.ExecutedEvent,
+                                              new ExecutedRoutedEventHandler(OnCommandExecuted), true);
+        }
+
         private static bool TryExecuteRoutedCommandBinding(ICommand command, object sender, RoutedEventArgs e)
         {
             //
             // Look for a matching RoutedCommandBinding on the sender and execute it if found.
             CommandBindingCollection commandBindings = null;
-            var uie = sender as UIElement;
+            UIElement uie = sender as UIElement;
             if (uie != null)
-                commandBindings = UIElementCommandBindingsProvider.GetCommandBindings(uie);
+            {
+                commandBindings = UiElementCommandBindingsProvider.GetCommandBindings(uie);
+            }
             else
             {
-                var uie3d = sender as UIElement3D;
+                UIElement3D uie3d = sender as UIElement3D;
                 if (uie3d != null)
-                    commandBindings = UIElement3DCommandBindingsProvider.GetCommandBindings(uie3d);
+                {
+                    commandBindings = UiElement3DCommandBindingsProvider.GetCommandBindings(uie3d);
+                }
                 else
                 {
-                    var ce = sender as ContentElement;
+                    ContentElement ce = sender as ContentElement;
                     if (ce != null)
+                    {
                         commandBindings = ContentElementCommandBindingsProvider.GetCommandBindings(ce);
+                    }
                 }
             }
 
@@ -105,22 +114,32 @@ namespace SoftCareManager.Common.UI.Commands
             {
                 foreach (var obj in commandBindings)
                 {
-                    var binding = obj as RoutedCommandBinding;
+                    RoutedCommandBinding binding = obj as RoutedCommandBinding;
                     if (binding != null)
                     {
                         if (binding.Command == command && (!e.Handled || binding.ViewHandledEvents))
                         {
                             if (e.RoutedEvent == CommandManager.PreviewCanExecuteEvent)
+                            {
                                 binding.OnPreviewCanExecute(sender, (CanExecuteRoutedEventArgs)e);
+                            }
                             else if (e.RoutedEvent == CommandManager.CanExecuteEvent)
+                            {
                                 binding.OnCanExecute(sender, (CanExecuteRoutedEventArgs)e);
+                            }
                             else if (e.RoutedEvent == CommandManager.PreviewExecutedEvent)
+                            {
                                 binding.OnPreviewExecuted(sender, (ExecutedRoutedEventArgs)e);
+                            }
                             else if (e.RoutedEvent == CommandManager.ExecutedEvent)
+                            {
                                 binding.OnExecuted(sender, (ExecutedRoutedEventArgs)e);
+                            }
 
                             if (e.Handled)
+                            {
                                 return true;
+                            }
                         }
                     }
                 }
@@ -137,17 +156,18 @@ namespace SoftCareManager.Common.UI.Commands
             //
             // A delegate that matches the signature of the getter method of the
             // CommandBindingsInternal property.
-            private delegate CommandBindingCollection CommandBindingsInternalGetter(TElementType @target);
 
             //
             // _GetCommandBindings is an unbounded delegate that is used to access the
             // CommandBindingsInternal property of UIElements, UIElement3D sand ContentElements.
             // Using unbounded delegates improves performance to nearly that of a direct method
             // call.
-            private static CommandBindingsInternalGetter _GetCommandBindings = (CommandBindingsInternalGetter)
-                Delegate.CreateDelegate(typeof(CommandBindingsInternalGetter), null,
-                typeof(TElementType).GetProperty("CommandBindingsInternal", BindingFlags.Instance | BindingFlags.NonPublic)
-                .GetGetMethod(true));
+            private static readonly CommandBindingsInternalGetter _GetCommandBindings = (CommandBindingsInternalGetter)
+                Delegate.CreateDelegate(typeof (CommandBindingsInternalGetter), null,
+                                        typeof (TElementType).GetProperty("CommandBindingsInternal", BindingFlags.Instance | BindingFlags.NonPublic)
+                                                             .GetGetMethod(true));
+
+            private delegate CommandBindingCollection CommandBindingsInternalGetter(TElementType @target);
 
             /// <summary>
             ///     Returns the collection of CommandBindings or null the collection is not

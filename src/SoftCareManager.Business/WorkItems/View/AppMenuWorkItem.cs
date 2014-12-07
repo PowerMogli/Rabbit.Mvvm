@@ -1,10 +1,12 @@
-﻿using SoftCareManager.Contracts.General;
-using SoftCareManager.Contracts.Model;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 
-namespace SoftCareManager.Contracts.WorkItems.View
+using SoftCareManager.Contracts.General;
+using SoftCareManager.Contracts.Model;
+using SoftCareManager.Contracts.WorkItems;
+
+namespace SoftCareManager.Business.WorkItems.View
 {
-    [Export(typeof(IWorkItem))]
+    [Export(typeof (IWorkItem))]
     [Workflow(WorkItemName.AppMenuWorkItem, WorkItemName = WorkItemName.AppMenuWorkItem)]
     public class AppMenuWorkItem : WorkItem<IAppMenuModel>
     {

@@ -7,16 +7,6 @@ namespace SoftCareManager.ViewModel.Application
         private bool _isActive;
         private int _shellId;
 
-        public int ShellId
-        {
-            get { return _shellId; }
-            set
-            {
-                _shellId = value;
-                RaisePropertyChanged();
-            }
-        }
-
         public AppShellViewModel(int shellId)
         {
             CanBeActivated = true;
@@ -29,6 +19,16 @@ namespace SoftCareManager.ViewModel.Application
             set
             {
                 _isActive = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public int ShellId
+        {
+            get { return _shellId; }
+            set
+            {
+                _shellId = value;
                 RaisePropertyChanged();
             }
         }

@@ -72,6 +72,10 @@
     <Compile Include="WorkItems\WorkItemProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SoftCareManager.Common\SoftCareManager.Common.csproj">
+      <Project>{29e176bd-58df-4b84-aa64-ada5bf20cbfb}</Project>
+      <Name>SoftCareManager.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SoftCareManager.Contracts\SoftCareManager.Contracts.csproj">
       <Project>{44aa4749-6bc7-4866-bb31-7a9c32668517}</Project>
       <Name>SoftCareManager.Contracts</Name>

@@ -1,5 +1,4 @@
-﻿
-namespace SoftCareManager.Contracts.General
+﻿namespace SoftCareManager.Contracts.General
 {
     public class ViewModelName
     {

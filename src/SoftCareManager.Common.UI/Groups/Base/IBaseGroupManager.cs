@@ -1,5 +1,6 @@
-﻿using SoftCareManager.Contracts.Groups.Base;
-using System.Windows;
+﻿using System.Windows;
+
+using SoftCareManager.Contracts.Groups.Base;
 
 namespace SoftCareManager.Common.UI.Groups.Base
 {
@@ -7,8 +8,8 @@ namespace SoftCareManager.Common.UI.Groups.Base
         where TGroup : IGroup
         where TGroupSource : IGroupSource
     {
-        TGroup AddSubscriber(string groupName, DependencyObject dependencyObject);
-
         TGroup AddPublisher(TGroupSource groupSource);
+
+        TGroup AddSubscriber(string groupName, DependencyObject dependencyObject);
     }
 }

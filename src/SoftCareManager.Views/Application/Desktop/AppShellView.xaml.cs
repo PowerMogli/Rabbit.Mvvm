@@ -10,7 +10,6 @@ namespace SoftCareManager.Views.Application.Desktop
         public AppShellView()
         {
             InitializeComponent();
-
         }
     }
 }

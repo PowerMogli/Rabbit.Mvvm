@@ -1,35 +1,37 @@
-﻿using SoftCareManager.Contracts.Application.Navigation;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+
+using SoftCareManager.Contracts.Application.Navigation;
 
 namespace SoftCareManager.Common
 {
     public class MergedNavigationParameter : NavigationParameter, IMergedNavigationParameter
     {
+        private int _shellId;
+
         public MergedNavigationParameter()
         {
             NavigationParameter = new Collection<INavigationParameter>();
         }
 
-        public void Add(INavigationParameter navigationParameter)
-        {
-            NavigationParameter.Add(navigationParameter);
-        }
-
         public Collection<INavigationParameter> NavigationParameter { get; private set; }
 
-        private int shellId;
         public override int ShellId
         {
-            get { return shellId; }
+            get { return _shellId; }
             protected set
             {
-                shellId = value;
+                _shellId = value;
 
                 foreach (var navigationParameter in NavigationParameter)
                 {
-                    navigationParameter.SetShellId(shellId);
+                    navigationParameter.SetShellId(_shellId);
                 }
             }
+        }
+
+        public void Add(INavigationParameter navigationParameter)
+        {
+            NavigationParameter.Add(navigationParameter);
         }
     }
 }

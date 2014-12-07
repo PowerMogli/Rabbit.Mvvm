@@ -1,5 +1,6 @@
-﻿using SoftCareManager.Contracts.Model.Patient;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
+using SoftCareManager.Contracts.Model.Patient;
 
 namespace SoftCareManager.Contracts.Services
 {

@@ -6,6 +6,7 @@ namespace SoftCareManager.ViewModel.Patient
     public class PatientStammdatenViewModel : ViewModelBase
     {
         private PatientViewModel patient;
+
         public PatientViewModel Patient
         {
             get { return patient; }

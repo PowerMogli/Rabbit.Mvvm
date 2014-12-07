@@ -2,7 +2,6 @@
 using SoftCareManager.Contracts.Application.Navigation;
 using SoftCareManager.Contracts.General;
 using SoftCareManager.Contracts.ViewModel;
-using SoftCareManager.Contracts.WorkItems;
 
 namespace SoftCareManager.ViewModel.Application
 {
@@ -13,9 +12,9 @@ namespace SoftCareManager.ViewModel.Application
         protected override void InnerInitialize(INavigationParameter navigationParameter)
         {
             CanBeActivated = true;
-            OverViewParameter = new NavigationParameter(Regions.AppInformationView, typeof(AppInformationViewModel));
+            OverViewParameter = new NavigationParameter(Regions.AppInformationView, typeof (AppInformationViewModel));
 
-            isInitialized = true;
+            IsInitialized = true;
         }
     }
 }

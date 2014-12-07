@@ -5,41 +5,45 @@
         xmlns:rm="clr-namespace:SoftCareManager.Common.UI.Region;assembly=SoftCareManager.Common.UI"
         xmlns:regions="clr-namespace:SoftCareManager.Contracts.General;assembly=SoftCareManager.Contracts"
         xmlns:behavior="clr-namespace:SoftCareManager.Views.Application.Behavior"
-        Title="SoftCareManager" 
-        Height="350" 
+        Title="SoftCareManager"
+        Height="350"
         Width="525">
     <Window.CommandBindings>
-        <appCommands:DataContextCommandBinding Command="appCommands:ApplicationCommands.ChangePlatformCommand" Executed="ChangeSkin" CanExecute="CanExecuteGeneral" />
-        <appCommands:DataContextCommandBinding Command="appCommands:ApplicationCommands.ChangeShellCommand" Executed="ChangeShell" CanExecute="CanChangeShell" />
-        <appCommands:DataContextCommandBinding Command="appCommands:ApplicationCommands.NavigateToCommand" Executed="NavigateTo" CanExecute="CanExecuteGeneral" />
-        <appCommands:DataContextCommandBinding Command="appCommands:ApplicationCommands.ToogleAppShellMenu" Executed="ToogleAppShellMenu" CanExecute="CanExecuteGeneral" />
+        <appCommands:DataContextCommandBinding Command="appCommands:ApplicationCommands.ChangePlatformCommand"
+                                               Executed="ChangeSkin" CanExecute="CanExecuteGeneral" />
+        <appCommands:DataContextCommandBinding Command="appCommands:ApplicationCommands.ChangeShellCommand"
+                                               Executed="ChangeShell" CanExecute="CanChangeShell" />
+        <appCommands:DataContextCommandBinding Command="appCommands:ApplicationCommands.NavigateToCommand"
+                                               Executed="NavigateTo" CanExecute="CanExecuteGeneral" />
+        <appCommands:DataContextCommandBinding Command="appCommands:ApplicationCommands.ToogleAppShellMenu"
+                                               Executed="ToogleAppShellMenu" CanExecute="CanExecuteGeneral" />
     </Window.CommandBindings>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="*" />
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
-        <ContentControl rm:RegionManager.RegionName="{x:Static regions:Regions.AppMenuView}" 
-                        Grid.Row="0" 
+        <ContentControl rm:RegionManager.RegionName="{x:Static regions:Regions.AppMenuView}"
+                        Grid.Row="0"
                         Grid.ColumnSpan="3" />
-        <ContentControl DataContext="{Binding AppShellSwitch.ShellViewModel}" 
-                        behavior:DataContextBehavior.IsTouch="{Binding Path=DataContext.IsTouch, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
-                        behavior:DataContextBehavior.MonitorShell="True" 
-                        Grid.Row="1" 
+        <ContentControl DataContext="{Binding AppShellSwitch.ShellViewModel}"
+                        behavior:DataContextBehavior.IsTouch="{Binding Path=DataContext.IsTouch, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                        behavior:DataContextBehavior.MonitorShell="True"
+                        Grid.Row="1"
                         Grid.Column="0"
                         Grid.ColumnSpan="3" />
-        <ContentControl rm:RegionManager.RegionName="{x:Static regions:Regions.AppInformationView}" 
-                        Grid.Row="2" 
-                        Grid.Column="0" 
-                        Grid.ColumnSpan="3"/>
+        <ContentControl rm:RegionManager.RegionName="{x:Static regions:Regions.AppInformationView}"
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3" />
     </Grid>
 </Window>

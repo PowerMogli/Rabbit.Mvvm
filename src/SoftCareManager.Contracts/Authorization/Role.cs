@@ -5,9 +5,10 @@ namespace SoftCareManager.Contracts.Authorization
     [Flags]
     public enum Role
     {
-        IT_Developert = 0,
-        IT_Service = 1,
-        TherapyConsult = 2,
-        CareManager = 4
+        None = 0,
+        ItDeveloper = 1,
+        ItService = 2,
+        TherapyConsult = 4,
+        CareManager = 8
     }
 }

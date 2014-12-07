@@ -1,36 +1,27 @@
-﻿using Appccelerate.EventBroker;
-using SoftCareManager.Contracts;
-using SoftCareManager.Contracts.General;
-using SoftCareManager.Contracts.Services;
-using SoftCareManager.Contracts.ViewModel;
-using SoftCareManager.Contracts.WorkItems;
-using System;
+﻿using System;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
+
+using Appccelerate.EventBroker;
+
+using SoftCareManager.Contracts;
+using SoftCareManager.Contracts.General;
+using SoftCareManager.Contracts.ViewModel;
+using SoftCareManager.Contracts.WorkItems;
+
 using Service = SoftCareManager.Contracts.Services;
 
 namespace SoftCareManager.Business.WorkItems
 {
-    [Export(typeof(IAppController))]
+    [Export(typeof (IAppController))]
     public class AppController : IAppController
     {
+        private readonly IObjectBuilder _objectBuilder;
         private readonly Service.IServiceProvider _serviceProvider;
 
         private readonly IWorkItemProvider _workItemProvider;
 
         private IEventBroker _eventBroker;
-
-        private readonly IObjectBuilder _objectBuilder;
-
-        // Property injection - daher weiterhin testbar!
-        public IEventBroker EventBroker
-        {
-            get { return _eventBroker ?? (_eventBroker = new EventBroker()); }
-            set { _eventBroker = value; }
-        }
-
-        [EventPublication(EventTopics.AppControllerInitialized)]
-        public event EventHandler InitializationCompleted;
 
         [ImportingConstructor]
         public AppController(Service.IServiceProvider serviceProvider, IWorkItemProvider workItemProvider, IObjectBuilder objectBuilder)
@@ -42,6 +33,20 @@ namespace SoftCareManager.Business.WorkItems
             RegisterOnEventBroker(this);
         }
 
+        [EventPublication(EventTopics.AppControllerInitialized)]
+        public event EventHandler InitializationCompleted;
+
+        public IEventBroker EventBroker
+        {
+            get { return _eventBroker ?? (_eventBroker = new EventBroker()); }
+            set { _eventBroker = value; }
+        }
+
+        public ViewModelBase BuildViewModel(Type viewModelType)
+        {
+            return _objectBuilder.Build(viewModelType, this) as ViewModelBase;
+        }
+
         public async void Execute()
         {
             await Task.Delay(100);
@@ -49,19 +54,10 @@ namespace SoftCareManager.Business.WorkItems
             OnInitializationCompleted();
         }
 
-        private void OnInitializationCompleted()
-        {
-            var handler = InitializationCompleted;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
-        }
-
         public TService GetService<TService>()
-            where TService : IService
+            where TService : Service.IService
         {
-            var service = _serviceProvider.GetService<TService>();
+            TService service = _serviceProvider.GetService<TService>();
             EventBroker.Register(service);
 
             return service;
@@ -69,7 +65,7 @@ namespace SoftCareManager.Business.WorkItems
 
         public object GetService(Type serviceType)
         {
-            var service = _serviceProvider.GetService(serviceType);
+            object service = _serviceProvider.GetService(serviceType);
             EventBroker.Register(service);
 
             return service;
@@ -78,7 +74,7 @@ namespace SoftCareManager.Business.WorkItems
         public TWorkItem GetWorkItem<TWorkItem>()
             where TWorkItem : IWorkItem
         {
-            var workItem = _workItemProvider.Get<TWorkItem>();
+            TWorkItem workItem = _workItemProvider.Get<TWorkItem>();
             workItem.RootWorkItem = this;
 
             EventBroker.Register(workItem);
@@ -88,7 +84,7 @@ namespace SoftCareManager.Business.WorkItems
 
         public object GetWorkItem(Type workItemType)
         {
-            var workItem = _workItemProvider.Get(workItemType) as IWorkItem;
+            IWorkItem workItem = _workItemProvider.Get(workItemType) as IWorkItem;
             if (workItem == null)
             {
                 return new NullWorkItem();
@@ -110,9 +106,13 @@ namespace SoftCareManager.Business.WorkItems
             EventBroker.Register(item);
         }
 
-        public ViewModelBase BuildViewModel(Type viewModelType)
+        private void OnInitializationCompleted()
         {
-            return _objectBuilder.Build(viewModelType, this) as ViewModelBase;
+            EventHandler handler = InitializationCompleted;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
     }
 }

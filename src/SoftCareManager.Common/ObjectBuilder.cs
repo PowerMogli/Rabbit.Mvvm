@@ -1,18 +1,19 @@
-﻿using SoftCareManager.Contracts;
-using SoftCareManager.Contracts.Services;
-using SoftCareManager.Contracts.WorkItems;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using SoftCareManager.Contracts;
+using SoftCareManager.Contracts.Services;
+using SoftCareManager.Contracts.WorkItems;
+
 namespace SoftCareManager.Common
 {
-    delegate object ObjectActivator(params object[] args);
+    internal delegate object ObjectActivator(params object[] args);
 
-    [Export(typeof(IObjectBuilder))]
+    [Export(typeof (IObjectBuilder))]
     public class ObjectBuilder : IObjectBuilder
     {
         private readonly IDictionary<Type, ObjectCreationInfo> _objectCreationInfos;
@@ -39,57 +40,12 @@ namespace SoftCareManager.Common
 
         private static ObjectCreationInfo CreateCreationInfo(Type typeToBuild, IAppController appController)
         {
-            var ctor = typeToBuild.GetConstructors().First();
-            var createdActivator = (ObjectActivator)GetActivator<ObjectActivator>(ctor);
-            var parameter = GetParameter(ctor, appController);
+            ConstructorInfo ctor = typeToBuild.GetConstructors()
+                                              .First();
+            ObjectActivator createdActivator = (ObjectActivator)GetActivator<ObjectActivator>(ctor);
+            object[] parameter = GetParameter(ctor, appController);
 
             return new ObjectCreationInfo(createdActivator, parameter);
-        }
-
-        private static object[] GetParameter(ConstructorInfo ctor, IAppController appController)
-        {
-            var parameterInfos = ctor.GetParameters();
-            object[] args = new object[parameterInfos.Length];
-
-            for (var index = 0; index <= parameterInfos.Length - 1; index++)
-            {
-                var parameterType = parameterInfos[index].ParameterType;
-
-                if (parameterType.IsAssignableFrom(typeof(IService)))
-                {
-                    args[index] = appController.GetService(parameterType);
-                }
-                else if (parameterType.IsAssignableFrom(typeof(IWorkItem)))
-                {
-                    args[index] = appController.GetWorkItem(parameterType);
-                }
-                else if (parameterType.IsAssignableFrom(typeof(IAppController)))
-                {
-                    args[index] = appController;
-                }
-            }
-
-            return args;
-        }
-
-        private static Delegate GetActivator<TActivator>(ConstructorInfo ctor)
-        {
-            ParameterInfo[] parameterInfo = ctor.GetParameters();
-
-            //create a single param of type object[]
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(object[]), "args");
-
-            Expression[] argsExpression = CreateParameterExpression(parameterInfo, parameterExpression);
-
-            //make a NewExpression that calls the
-            //ctor with the args we just created
-            NewExpression newExpression = Expression.New(ctor, argsExpression);
-
-            //create a lambda with the New
-            //Expression as body and our param object[] as arg
-            LambdaExpression lambdaExpression = Expression.Lambda(typeof(TActivator), newExpression, parameterExpression);
-
-            return lambdaExpression.Compile();
         }
 
         private static Expression[] CreateParameterExpression(ParameterInfo[] paramsInfo, ParameterExpression param)
@@ -110,6 +66,52 @@ namespace SoftCareManager.Common
                 argsExpression[i] = paramCastExpression;
             }
             return argsExpression;
+        }
+
+        private static Delegate GetActivator<TActivator>(ConstructorInfo ctor)
+        {
+            ParameterInfo[] parameterInfo = ctor.GetParameters();
+
+            //create a single param of type object[]
+            ParameterExpression parameterExpression = Expression.Parameter(typeof (object[]), "args");
+
+            Expression[] argsExpression = CreateParameterExpression(parameterInfo, parameterExpression);
+
+            //make a NewExpression that calls the
+            //ctor with the args we just created
+            NewExpression newExpression = Expression.New(ctor, argsExpression);
+
+            //create a lambda with the New
+            //Expression as body and our param object[] as arg
+            LambdaExpression lambdaExpression = Expression.Lambda(typeof (TActivator), newExpression, parameterExpression);
+
+            return lambdaExpression.Compile();
+        }
+
+        private static object[] GetParameter(ConstructorInfo ctor, IAppController appController)
+        {
+            ParameterInfo[] parameterInfos = ctor.GetParameters();
+            object[] args = new object[parameterInfos.Length];
+
+            for (int index = 0; index <= parameterInfos.Length - 1; index++)
+            {
+                Type parameterType = parameterInfos[index].ParameterType;
+
+                if (parameterType.IsAssignableFrom(typeof (IService)))
+                {
+                    args[index] = appController.GetService(parameterType);
+                }
+                else if (parameterType.IsAssignableFrom(typeof (IWorkItem)))
+                {
+                    args[index] = appController.GetWorkItem(parameterType);
+                }
+                else if (parameterType.IsAssignableFrom(typeof (IAppController)))
+                {
+                    args[index] = appController;
+                }
+            }
+
+            return args;
         }
     }
 }

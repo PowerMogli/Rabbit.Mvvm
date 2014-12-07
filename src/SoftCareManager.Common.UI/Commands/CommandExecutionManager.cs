@@ -20,14 +20,14 @@ namespace SoftCareManager.Common.UI.Commands
     ///     better performance than using reflection.
     /// </summary>
     public static class CommandExecutionManager
-    {   
-        private static readonly ReaderWriterLockSlim _Lock = new ReaderWriterLockSlim();
-
-        private static readonly Dictionary<CommandExecutionProviderKey, ICommandExecutionProvider> _ExecutionProviders
+    {
+        private static readonly Dictionary<CommandExecutionProviderKey, ICommandExecutionProvider> ExecutionProviders
             = new Dictionary<CommandExecutionProviderKey, ICommandExecutionProvider>();
 
-        private static object _DisconnectedItemSentinelValue = null;
-        
+        private static readonly ReaderWriterLockSlim Lock = new ReaderWriterLockSlim();
+
+        private static object _disconnectedItemSentinelValue;
+
         /// <summary>
         ///     Attempts to dynamically execute the method indicated by canExecuteMethodName 
         ///     and, if necessary, the method indicated by executedMethodName on the provided
@@ -62,41 +62,56 @@ namespace SoftCareManager.Common.UI.Commands
         {
             if (target != null && !string.IsNullOrEmpty(executedMethodName))
             {
-                var executionProvider = GetCommandExecutionProvider(target, canExecuteMethodName, executedMethodName);
+                ICommandExecutionProvider executionProvider = GetCommandExecutionProvider(target, canExecuteMethodName, executedMethodName);
                 if (executionProvider != null)
                 {
                     canExecute = executionProvider.InvokeCanExecuteMethod(target, parameter);
                     if (canExecute && execute)
+                    {
                         executionProvider.InvokeExecutedMethod(target, parameter);
+                    }
                     return true;
                 }
             }
             canExecute = false;
             return false;
         }
-        
+
         private static ICommandExecutionProvider GetCommandExecutionProvider(object target, string canExecuteMethodName, string executedMethodName)
         {
-            if (target == _DisconnectedItemSentinelValue)
+            if (target == _disconnectedItemSentinelValue)
+            {
                 return null;
+            }
 
-            var key = new CommandExecutionProviderKey(target.GetType(), canExecuteMethodName, executedMethodName);
+            CommandExecutionProviderKey key = new CommandExecutionProviderKey(target.GetType(), canExecuteMethodName, executedMethodName);
             ICommandExecutionProvider executionProvider = null;
-            _Lock.EnterUpgradeableReadLock();
+            Lock.EnterUpgradeableReadLock();
             try
             {
-                if (!_ExecutionProviders.TryGetValue(key, out executionProvider))
+                if (!ExecutionProviders.TryGetValue(key, out executionProvider))
                 {
-                    _Lock.EnterWriteLock();
+                    Lock.EnterWriteLock();
                     try
                     {
-                        if (!_ExecutionProviders.TryGetValue(key, out executionProvider))
+                        if (!ExecutionProviders.TryGetValue(key, out executionProvider))
                         {
-                            var executionProviderType = typeof(CommandExecutionProvider<>).MakeGenericType(key.TargetType);
-                            var executionProviderCtor = executionProviderType.GetConstructor(new Type[] { typeof(Type), typeof(string), typeof(string) });
+                            Type executionProviderType =
+                                typeof (CommandExecutionProvider<>).MakeGenericType(key.TargetType);
+                            ConstructorInfo executionProviderCtor = executionProviderType.GetConstructor(new Type[]
+                            {
+                                typeof (Type),
+                                typeof (string),
+                                typeof (string)
+                            });
                             try
                             {
-                                executionProvider = (ICommandExecutionProvider)executionProviderCtor.Invoke(new object[] { key.TargetType, key.CanExecuteMethodName, key.ExecutedMethodName });
+                                executionProvider = (ICommandExecutionProvider)executionProviderCtor.Invoke(new object[]
+                                {
+                                    key.TargetType,
+                                    key.CanExecuteMethodName,
+                                    key.ExecutedMethodName
+                                });
                             }
                             catch (TargetInvocationException)
                             {
@@ -110,37 +125,60 @@ namespace SoftCareManager.Common.UI.Commands
                                 // Answer 10 on the forum located here:
                                 // http://www.go4answers.com/Example/disconnecteditem-causing-it-115624.aspx
 
-                                if (_DisconnectedItemSentinelValue == null)
+                                if (_disconnectedItemSentinelValue == null)
                                 {
-                                    var targetType = target.GetType();
+                                    Type targetType = target.GetType();
                                     if (targetType.FullName == "MS.Internal.NamedObject")
                                     {
-                                        var nameField = targetType.GetField("_name", BindingFlags.Instance | BindingFlags.NonPublic);
+                                        FieldInfo nameField = targetType.GetField("_name",
+                                                                                  BindingFlags.Instance |
+                                                                                  BindingFlags.NonPublic);
                                         if (nameField != null)
+                                        {
                                             if ((string)nameField.GetValue(target) == "DisconnectedItem")
                                             {
-                                                _DisconnectedItemSentinelValue = target;
+                                                _disconnectedItemSentinelValue = target;
                                             }
+                                        }
                                     }
                                 }
-                                if (target != _DisconnectedItemSentinelValue)
+                                if (target != _disconnectedItemSentinelValue)
+                                {
                                     throw;
+                                }
                             }
 
-                            _ExecutionProviders.Add(key, executionProvider);
+                            ExecutionProviders.Add(key, executionProvider);
                         }
                     }
                     finally
                     {
-                        _Lock.ExitWriteLock();
+                        Lock.ExitWriteLock();
                     }
                 }
             }
             finally
             {
-                _Lock.ExitUpgradeableReadLock();
+                Lock.ExitUpgradeableReadLock();
             }
             return executionProvider;
+        }
+
+        /// <summary>
+        ///     Represents an object that is capable of executing a specific CanExecute method and
+        ///     Execute method for a specific Type on any object of the specific type.
+        /// </summary>
+        private interface ICommandExecutionProvider
+        {
+            string CanExecuteMethodName { get; }
+
+            string ExecutedMethodName { get; }
+
+            Type TargetType { get; }
+
+            bool InvokeCanExecuteMethod(object target, object parameter);
+
+            void InvokeExecutedMethod(object target, object parameter);
         }
 
         /// <summary>
@@ -150,36 +188,19 @@ namespace SoftCareManager.Common.UI.Commands
         /// </summary>
         private struct CommandExecutionProviderKey
         {
-            public Type TargetType { get; private set; }
+            public CommandExecutionProviderKey(Type targetType, string canExecuteMethodName, string executedMethodName)
+                : this()
+            {
+                TargetType = targetType;
+                CanExecuteMethodName = canExecuteMethodName;
+                ExecutedMethodName = executedMethodName;
+            }
 
             public string CanExecuteMethodName { get; private set; }
 
             public string ExecutedMethodName { get; private set; }
 
-            public CommandExecutionProviderKey(Type targetType, string canExecuteMethodName, string executedMethodName)
-                : this()
-            {
-                this.TargetType = targetType;
-                this.CanExecuteMethodName = canExecuteMethodName;
-                this.ExecutedMethodName = executedMethodName;
-            }
-        }
-
-        /// <summary>
-        ///     Represents an object that is capable of executing a specific CanExecute method and
-        ///     Execute method for a specific Type on any object of the specific type.
-        /// </summary>
-        private interface ICommandExecutionProvider
-        {
-            Type TargetType { get; }
-
-            string CanExecuteMethodName { get; }
-
-            string ExecutedMethodName { get; }
-
-            bool InvokeCanExecuteMethod(object target, object parameter);
-
-            void InvokeExecutedMethod(object target, object parameter);
+            public Type TargetType { get; private set; }
         }
 
         /// <summary>
@@ -193,80 +214,103 @@ namespace SoftCareManager.Common.UI.Commands
             // Because the method signatures are well-known, unbounded delegates can be used to
             // execute the command methods. Unbounded delegates have a significant performance
             // advantage over "standard" reflection method calls.
-            private delegate void ExecutedDelegate(TTarget @target);
-            private delegate void ExecutedWithParamDelegate(TTarget @target, object parameter);
+
+            private readonly CanExecuteDelegate _canExecute;
+            private readonly CanExecuteWithParamDelegate _canExecuteWithParam;
+            private readonly ExecutedDelegate _executed;
+            private readonly ExecutedWithParamDelegate _executedWithParam;
+
+            public CommandExecutionProvider(Type targetType, string canExecuteMethodName, string executedMethodName)
+            {
+                TargetType = targetType;
+                CanExecuteMethodName = canExecuteMethodName;
+                ExecutedMethodName = executedMethodName;
+
+                MethodInfo canExecuteMethodInfo = GetMethodInfo(CanExecuteMethodName);
+                if (canExecuteMethodInfo != null && canExecuteMethodInfo.ReturnType == typeof (bool))
+                {
+                    if (canExecuteMethodInfo.GetParameters()
+                                            .Length == 0)
+                    {
+                        _canExecute = (CanExecuteDelegate)Delegate.CreateDelegate(typeof (CanExecuteDelegate), null, canExecuteMethodInfo);
+                    }
+                    else
+                    {
+                        _canExecuteWithParam = (CanExecuteWithParamDelegate)Delegate.CreateDelegate(typeof (CanExecuteWithParamDelegate), null, canExecuteMethodInfo);
+                    }
+                }
+                if (_canExecute == null && _canExecuteWithParam == null)
+                {
+                    throw new Exception(string.Format("Method {0} on type {1} does not have a valid method signature. The method must have one of the following signatures: 'public bool CanExecute()' or 'public bool CanExecute(object parameter)'",
+                                                      CanExecuteMethodName,
+                                                      typeof (TTarget)));
+                }
+
+                MethodInfo executedMethodInfo = GetMethodInfo(ExecutedMethodName);
+                if (executedMethodInfo != null && executedMethodInfo.ReturnType == typeof (void))
+                {
+                    if (executedMethodInfo.GetParameters()
+                                          .Length == 0)
+                    {
+                        _executed = (ExecutedDelegate)Delegate.CreateDelegate(typeof (ExecutedDelegate), null, executedMethodInfo);
+                    }
+                    else
+                    {
+                        _executedWithParam = (ExecutedWithParamDelegate)Delegate.CreateDelegate(typeof (ExecutedWithParamDelegate), null, executedMethodInfo);
+                    }
+                }
+                if (_executed == null && _executedWithParam == null)
+                {
+                    throw new Exception(string.Format("Method {0} on type {1} does not have a valid method signature. The method must have one of the following signatures: 'public void Executed()' or 'public void Executed(object parameter)'",
+                                                      ExecutedMethodName,
+                                                      typeof (TTarget)));
+                }
+            }
+
             private delegate bool CanExecuteDelegate(TTarget @target);
+
             private delegate bool CanExecuteWithParamDelegate(TTarget @target, object parameter);
 
-            private CanExecuteDelegate _canExecute;
-            private CanExecuteWithParamDelegate _canExecuteWithParam;
-            private ExecutedDelegate _executed;
-            private ExecutedWithParamDelegate _executedWithParam;
+            private delegate void ExecutedDelegate(TTarget @target);
 
-            public Type TargetType { get; private set; }
+            private delegate void ExecutedWithParamDelegate(TTarget @target, object parameter);
 
             public string CanExecuteMethodName { get; private set; }
 
             public string ExecutedMethodName { get; private set; }
 
+            public Type TargetType { get; private set; }
+
             public bool InvokeCanExecuteMethod(object target, object parameter)
             {
-                if (this._canExecute != null)
-                    return this._canExecute((TTarget)target);
-                else if (this._canExecuteWithParam != null)
-                    return this._canExecuteWithParam((TTarget)target, parameter);
-                return false;
+                if (_canExecute != null)
+                {
+                    return _canExecute((TTarget)target);
+                }
+
+                return _canExecuteWithParam != null
+                       && _canExecuteWithParam((TTarget)target, parameter);
             }
 
             public void InvokeExecutedMethod(object target, object parameter)
             {
-                if (this._executed != null)
-                    this._executed((TTarget)target);
-                else if (this._executedWithParam != null)
-                    this._executedWithParam((TTarget)target, parameter);
+                if (_executed != null)
+                {
+                    _executed((TTarget)target);
+                }
+                else if (_executedWithParam != null)
+                {
+                    _executedWithParam((TTarget)target, parameter);
+                }
             }
 
-            public CommandExecutionProvider(Type targetType, string canExecuteMethodName, string executedMethodName)
+            private static MethodInfo GetMethodInfo(string methodName)
             {
-                this.TargetType = targetType;
-                this.CanExecuteMethodName = canExecuteMethodName;
-                this.ExecutedMethodName = executedMethodName;
-
-                var canExecuteMethodInfo = this.GetMethodInfo(this.CanExecuteMethodName);
-                if (canExecuteMethodInfo != null && canExecuteMethodInfo.ReturnType == typeof(bool))
+                return typeof (TTarget).GetMethod(methodName, new[]
                 {
-                    if (canExecuteMethodInfo.GetParameters().Length == 0)
-                        this._canExecute = (CanExecuteDelegate)
-                            Delegate.CreateDelegate(typeof(CanExecuteDelegate), null, canExecuteMethodInfo);
-                    else
-                        this._canExecuteWithParam = (CanExecuteWithParamDelegate)
-                            Delegate.CreateDelegate(typeof(CanExecuteWithParamDelegate), null, canExecuteMethodInfo);
-                }
-                if (this._canExecute == null && this._canExecuteWithParam == null)
-                    throw new Exception(string.Format(
-                        "Method {0} on type {1} does not have a valid method signature. The method must have one of the following signatures: 'public bool CanExecute()' or 'public bool CanExecute(object parameter)'",
-                        this.CanExecuteMethodName, typeof(TTarget)));
-
-                var executedMethodInfo = this.GetMethodInfo(this.ExecutedMethodName);
-                if (executedMethodInfo != null && executedMethodInfo.ReturnType == typeof(void))
-                {
-                    if (executedMethodInfo.GetParameters().Length == 0)
-                        this._executed = (ExecutedDelegate)
-                            Delegate.CreateDelegate(typeof(ExecutedDelegate), null, executedMethodInfo);
-                    else
-                        this._executedWithParam = (ExecutedWithParamDelegate)
-                            Delegate.CreateDelegate(typeof(ExecutedWithParamDelegate), null, executedMethodInfo);
-                }
-                if (this._executed == null && this._executedWithParam == null)
-                    throw new Exception(string.Format(
-                        "Method {0} on type {1} does not have a valid method signature. The method must have one of the following signatures: 'public void Executed()' or 'public void Executed(object parameter)'",
-                        this.ExecutedMethodName, typeof(TTarget)));
-            }
-
-            private MethodInfo GetMethodInfo(string methodName)
-            {
-                return typeof(TTarget).GetMethod(methodName, new Type[] { typeof(object) })
-                    ?? typeof(TTarget).GetMethod(methodName, new Type[0]);
+                    typeof (object)
+                })
+                       ?? typeof (TTarget).GetMethod(methodName, new Type[0]);
             }
         }
     }

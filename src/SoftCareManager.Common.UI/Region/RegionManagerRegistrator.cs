@@ -1,33 +1,30 @@
-﻿using SoftCareManager.Contracts.Application.Region;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+
+using SoftCareManager.Contracts.Application.Region;
 
 namespace SoftCareManager.Common.UI.Region
 {
     public class RegionManagerRegistrator
     {
-        public void Register(Region region, ContentControl contentControl)
-        {
-            var regionManager = FindRegionManager(contentControl);
-            regionManager.Regions.Add(region);
-        }
-
         public IRegionManager FindRegionManager(DependencyObject dependencyObject)
         {
-            var regionmanager = RegionManager.GetRegionManager(dependencyObject);
+            IRegionManager regionmanager = RegionManager.GetRegionManager(dependencyObject);
             if (regionmanager != null)
             {
                 return regionmanager;
             }
 
-            DependencyObject parent = null;
-            parent = LogicalTreeHelper.GetParent(dependencyObject);
-            if (parent != null)
-            {
-                return this.FindRegionManager(parent);
-            }
+            DependencyObject parent = LogicalTreeHelper.GetParent(dependencyObject);
+            return parent != null
+                ? FindRegionManager(parent)
+                : null;
+        }
 
-            return null;
+        public void Register(Region region, ContentControl contentControl)
+        {
+            IRegionManager regionManager = FindRegionManager(contentControl);
+            regionManager.Regions.Add(region);
         }
     }
 }

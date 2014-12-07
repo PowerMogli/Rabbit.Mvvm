@@ -1,5 +1,6 @@
-﻿using SoftCareManager.Contracts.WorkItems;
-using System;
+﻿using System;
+
+using SoftCareManager.Contracts.WorkItems;
 
 namespace SoftCareManager.Contracts
 {

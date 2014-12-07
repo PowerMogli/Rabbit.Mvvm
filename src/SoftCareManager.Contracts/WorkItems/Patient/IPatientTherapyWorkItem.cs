@@ -1,7 +1,7 @@
-﻿using SoftCareManager.Contracts.Model.Therapy;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
+
+using SoftCareManager.Contracts.Model.Therapy;
 
 namespace SoftCareManager.Contracts.WorkItems.Patient
 {

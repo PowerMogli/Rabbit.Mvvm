@@ -10,8 +10,8 @@ namespace SoftCareManager.Common.UI.Groups.Selection
             SelectionPublisher = selectionPublisher;
         }
 
-        public ISelectionPublisher SelectionPublisher { get; private set; }
-
         public string GroupName { get; private set; }
+
+        public ISelectionPublisher SelectionPublisher { get; private set; }
     }
 }

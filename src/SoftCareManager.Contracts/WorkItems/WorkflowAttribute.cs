@@ -8,16 +8,17 @@ namespace SoftCareManager.Contracts.WorkItems
     public class WorkflowAttribute : ExportAttribute
     {
         public WorkflowAttribute()
-            : this(string.Empty) { }
-
-        public WorkflowAttribute(string contractName)
-            : base(contractName, typeof(IWorkItem))
+            : this(string.Empty)
         {
-
         }
 
-        public Type WorkItemType { get; set; }
+        public WorkflowAttribute(string contractName)
+            : base(contractName, typeof (IWorkItem))
+        {
+        }
 
         public string WorkItemName { get; set; }
+
+        public Type WorkItemType { get; set; }
     }
 }

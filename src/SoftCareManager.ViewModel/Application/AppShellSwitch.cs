@@ -1,12 +1,15 @@
-﻿using SoftCareManager.Contracts.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using SoftCareManager.Contracts.ViewModel;
 
 namespace SoftCareManager.ViewModel.Application
 {
     public class AppShellSwitch : ViewModelBase
     {
         private readonly List<Lazy<ViewModelBase>> _shellViewModels;
+
+        private ViewModelBase _shellViewModel;
 
         public AppShellSwitch()
         {
@@ -18,7 +21,6 @@ namespace SoftCareManager.ViewModel.Application
             };
         }
 
-        private ViewModelBase _shellViewModel;
         public ViewModelBase ShellViewModel
         {
             get { return _shellViewModel; }

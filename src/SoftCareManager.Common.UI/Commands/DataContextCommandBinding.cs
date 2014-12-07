@@ -21,6 +21,22 @@ namespace SoftCareManager.Common.UI.Commands
     public class DataContextCommandBinding : RoutedCommandBinding
     {
         /// <summary>
+        ///     Initializes a new instance of the <see cref="DataContextCommandBinding"/> class.
+        /// </summary>
+        public DataContextCommandBinding()
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="DataContextCommandBinding"/> class by
+        ///     using the specified <see cref="ICommand"/>.
+        /// </summary>
+        public DataContextCommandBinding(ICommand command)
+            : base(command)
+        {
+        }
+
+        /// <summary>
         ///     Name of the method of the DataContext that is executed when the command associated
         ///     with this <see cref="DataContextCommandBinding"/> initiates a check to determine
         ///     whether the command can be executed on the current command target.
@@ -71,17 +87,39 @@ namespace SoftCareManager.Common.UI.Commands
         public new string PreviewExecuted { get; set; }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DataContextCommandBinding"/> class.
+        ///     The method that is called when the CanExecute <see cref="RoutedEvent"/> for the
+        ///     <see cref="ICommand"/> associated with this <see cref="DataContextCommandBinding"/>
+        ///     should be handled.
         /// </summary>
-        public DataContextCommandBinding() { }
+        /// <param name="sender">The command target on which the command is executing.</param>
+        /// <param name="e">The event data.</param>
+        protected internal override void OnCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            object target = GetDataContext(sender);
+            bool canExecute;
+            if (CommandExecutionManager.TryExecuteCommand(target, e.Parameter, false, Executed, CanExecute, out canExecute))
+            {
+                e.CanExecute = canExecute;
+                e.Handled = true;
+            }
+        }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DataContextCommandBinding"/> class by
-        ///     using the specified <see cref="ICommand"/>.
+        ///     The method that is called when the Executed <see cref="RoutedEvent"/> for the
+        ///     <see cref="ICommand"/> associated with this <see cref="DataContextCommandBinding"/>
+        ///     should be handled.
         /// </summary>
-        public DataContextCommandBinding(ICommand command)
-            : base(command)
-        { }
+        /// <param name="sender">The command target on which the command is executing.</param>
+        /// <param name="e">The event data.</param>
+        protected internal override void OnExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            object target = GetDataContext(sender);
+            bool canExecute;
+            if (CommandExecutionManager.TryExecuteCommand(target, e.Parameter, true, Executed, CanExecute, out canExecute))
+            {
+                e.Handled = true;
+            }
+        }
 
         /// <summary>
         ///     The method that is called when the PreviewCanExecute <see cref="RoutedEvent"/> for the
@@ -92,27 +130,9 @@ namespace SoftCareManager.Common.UI.Commands
         /// <param name="e">The event data.</param>
         protected internal override void OnPreviewCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            var target = GetDataContext(sender);
+            object target = GetDataContext(sender);
             bool canExecute;
-            if (CommandExecutionManager.TryExecuteCommand(target, e.Parameter, false, this.PreviewExecuted, this.PreviewCanExecute, out canExecute))
-            {
-                e.CanExecute = canExecute;
-                e.Handled = true;
-            }
-        }
-        
-        /// <summary>
-        ///     The method that is called when the CanExecute <see cref="RoutedEvent"/> for the
-        ///     <see cref="ICommand"/> associated with this <see cref="DataContextCommandBinding"/>
-        ///     should be handled.
-        /// </summary>
-        /// <param name="sender">The command target on which the command is executing.</param>
-        /// <param name="e">The event data.</param>
-        protected internal override void OnCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            var target = GetDataContext(sender);
-            bool canExecute;
-            if (CommandExecutionManager.TryExecuteCommand(target, e.Parameter, false, this.Executed, this.CanExecute, out canExecute))
+            if (CommandExecutionManager.TryExecuteCommand(target, e.Parameter, false, PreviewExecuted, PreviewCanExecute, out canExecute))
             {
                 e.CanExecute = canExecute;
                 e.Handled = true;
@@ -128,37 +148,26 @@ namespace SoftCareManager.Common.UI.Commands
         /// <param name="e">The event data.</param>
         protected internal override void OnPreviewExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            var target = GetDataContext(sender);
+            object target = GetDataContext(sender);
             bool canExecute;
-            if (CommandExecutionManager.TryExecuteCommand(target, e.Parameter, true, this.PreviewExecuted, this.PreviewCanExecute, out canExecute))
+            if (CommandExecutionManager.TryExecuteCommand(target, e.Parameter, true, PreviewExecuted, PreviewCanExecute, out canExecute))
+            {
                 e.Handled = true;
+            }
         }
 
-        /// <summary>
-        ///     The method that is called when the Executed <see cref="RoutedEvent"/> for the
-        ///     <see cref="ICommand"/> associated with this <see cref="DataContextCommandBinding"/>
-        ///     should be handled.
-        /// </summary>
-        /// <param name="sender">The command target on which the command is executing.</param>
-        /// <param name="e">The event data.</param>
-        protected internal override void OnExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            var target = GetDataContext(sender);
-            bool canExecute;
-            if (CommandExecutionManager.TryExecuteCommand(target, e.Parameter, true, this.Executed, this.CanExecute, out canExecute))
-                e.Handled = true;
-        }
-        
         private static object GetDataContext(object element)
         {
-            var fe = element as FrameworkElement;
+            FrameworkElement fe = element as FrameworkElement;
             if (fe != null)
-                return fe.DataContext;
-            else
             {
-                var fce = element as FrameworkContentElement;
-                return fce == null ? null : fce.DataContext;
+                return fe.DataContext;
             }
+
+            FrameworkContentElement fce = element as FrameworkContentElement;
+            return fce == null
+                ? null
+                : fce.DataContext;
         }
     }
 }

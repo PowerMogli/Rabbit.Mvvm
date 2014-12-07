@@ -24,9 +24,8 @@
 
         #region AppView
 
-        public const string AppMenuWorkItem = "AppMenuWorkItem";
-
         public const string AppInformationWorkItem = "AppInformationWorkItem";
+        public const string AppMenuWorkItem = "AppMenuWorkItem";
 
         #endregion
     }

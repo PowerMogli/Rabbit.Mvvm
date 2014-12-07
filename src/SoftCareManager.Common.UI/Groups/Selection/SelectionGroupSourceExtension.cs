@@ -1,52 +1,27 @@
-﻿using SoftCareManager.Contracts.Groups.Selection;
+﻿using SoftCareManager.Common.UI.Groups.Base;
+using SoftCareManager.Contracts.Groups.Selection;
 using System;
-using System.Windows;
 using System.Windows.Markup;
 
 namespace SoftCareManager.Common.UI.Groups.Selection
 {
     [MarkupExtensionReturnType(typeof(SelectionGroupSource))]
-    public class SelectionGroupSourceExtension : MarkupExtension
+    public class SelectionGroupSourceExtension : BaseGroupSourceExtension<SelectionGroupSource>
     {
-        public string SelectionGroupName { get; set; }
-
-        public ISelectionPublisher SelectionPublisher { get; private set; }
-
-        public SelectionGroupSourceExtension() { }
-
-        public SelectionGroupSourceExtension(string selectionGroupName)
+        public SelectionGroupSourceExtension()
         {
-            SelectionGroupName = selectionGroupName;
+            _groupSource = new Lazy<SelectionGroupSource>(() => new SelectionGroupSource(GroupName, _dataContext as ISelectionPublisher));
         }
 
-        public override object ProvideValue(IServiceProvider serviceProvider)
+        public SelectionGroupSourceExtension(string groupName)
+            : this()
         {
-            SelectionPublisher = GetDataContext(serviceProvider);
-
-            if (string.IsNullOrWhiteSpace(SelectionGroupName)
-                || SelectionPublisher == null)
-            {
-                throw new InvalidOperationException("SelectionGroupName and DataContext  must be provided.");
-            }
-
-            return new SelectionGroupSource(SelectionGroupName, SelectionPublisher);
+            GroupName = groupName;
         }
 
-        private static ISelectionPublisher GetDataContext(IServiceProvider serviceProvider)
+        protected override void OnDataContextFound()
         {
-            var target = (IProvideValueTarget)serviceProvider.GetService(typeof(IProvideValueTarget));
-            if (target == null)
-            {
-                return null;
-            }
-
-            var dependencyObject = target.TargetObject as DependencyObject;
-            if (dependencyObject == null)
-            {
-                return null;
-            }
-
-            return dependencyObject.GetValue(FrameworkElement.DataContextProperty) as ISelectionPublisher;
+            SelectionGroupManager.SetSelectionGroupSource(_targetObject, _groupSource.Value);
         }
     }
 }

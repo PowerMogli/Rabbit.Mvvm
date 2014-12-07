@@ -16,20 +16,23 @@ namespace SoftCareManager.Contracts.General
 
             instanceField = newValue;
 
-            var propertyName = GetPropertyName(expression);
+            string propertyName = GetPropertyName(expression);
             RaisePropertyChanged(propertyName);
         }
 
         protected void RaisePropertyChanged<T>(Expression<Func<T>> propertyLambda)
         {
-            var propertyName = GetPropertyName(propertyLambda);
+            string propertyName = GetPropertyName(propertyLambda);
 
-            if (propertyName != null) RaisePropertyChanged(propertyName);
+            if (propertyName != null)
+            {
+                RaisePropertyChanged(propertyName);
+            }
         }
 
-        protected void RaisePropertyChanged([CallerMemberName]string propertyName = "")
+        protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
         {
-            var handler = PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
 
             if (handler != null)
             {
@@ -39,7 +42,7 @@ namespace SoftCareManager.Contracts.General
 
         private static string GetPropertyName<T>(Expression<Func<T>> propertyLambda)
         {
-            var memberExpression = propertyLambda.Body as MemberExpression;
+            MemberExpression memberExpression = propertyLambda.Body as MemberExpression;
 
             if (memberExpression == null)
             {

@@ -1,5 +1,6 @@
-﻿using SoftCareManager.Contracts.Model;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+
+using SoftCareManager.Contracts.Model;
 
 namespace SoftCareManager.ViewModel
 {
@@ -8,13 +9,13 @@ namespace SoftCareManager.ViewModel
         public static ObservableCollection<object> Cast<TModel>(this ObservableCollection<TModel> source)
             where TModel : IModel
         {
-            var items = new ObservableCollection<object>();
+            ObservableCollection<object> items = new ObservableCollection<object>();
             if (source == null)
             {
                 return items;
             }
 
-            foreach(var model in source)
+            foreach (var model in source)
             {
                 items.Add(model);
             }

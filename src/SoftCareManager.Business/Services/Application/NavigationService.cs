@@ -1,13 +1,14 @@
-﻿using SoftCareManager.Contracts.Application.Navigation;
+﻿using System;
+using System.ComponentModel.Composition;
+
+using SoftCareManager.Contracts.Application.Navigation;
 using SoftCareManager.Contracts.Application.Region;
 using SoftCareManager.Contracts.Services;
 using SoftCareManager.Contracts.ViewModel;
-using System;
-using System.ComponentModel.Composition;
 
 namespace SoftCareManager.Business.Services.Application
 {
-    [Export(typeof(INavigationService))]
+    [Export(typeof (INavigationService))]
     public class NavigationService : INavigationService
     {
         public void RequestNavigation(IRegion region, ViewModelBase viewModel, Action<INavigationResult> navigationCallback)
@@ -26,7 +27,7 @@ namespace SoftCareManager.Business.Services.Application
 
         private void InvokeOnNavigationAwareElement(ViewModelBase viewModel)
         {
-            var navigationAware = viewModel as INavigationAware;
+            INavigationAware navigationAware = viewModel as INavigationAware;
 
             if (navigationAware == null)
             {
@@ -38,8 +39,10 @@ namespace SoftCareManager.Business.Services.Application
 
         private void NotifyNavigationFailed(Action<NavigationResult> navigationCallback, Exception e)
         {
-            var navigationResult =
-                e != null ? new NavigationResult(true, new NavigationException(e.Message, e)) : new NavigationResult(false);
+            NavigationResult navigationResult =
+                e != null
+                    ? new NavigationResult(true, new NavigationException(e.Message, e))
+                    : new NavigationResult(false);
 
             navigationCallback(navigationResult);
         }

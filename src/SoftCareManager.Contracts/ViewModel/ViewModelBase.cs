@@ -5,13 +5,13 @@ namespace SoftCareManager.Contracts.ViewModel
 {
     public abstract class ViewModelBase : ObservableObject
     {
-        public bool CanBeActivated { get; protected set; }
+        protected bool IsInitialized;
 
-        protected bool isInitialized;
+        public bool CanBeActivated { get; protected set; }
 
         public virtual void Initialize(INavigationParameter navigationParameter)
         {
-            if (isInitialized)
+            if (IsInitialized)
             {
                 return;
             }
@@ -21,7 +21,6 @@ namespace SoftCareManager.Contracts.ViewModel
 
         protected virtual void InnerInitialize(INavigationParameter parameter)
         {
-
         }
     }
 }

@@ -1,22 +1,15 @@
-﻿using SoftCareManager.Contracts.Model.Therapy;
+﻿using System;
+
+using SoftCareManager.Contracts.Model.Therapy;
 using SoftCareManager.Contracts.ViewModel;
 
 namespace SoftCareManager.ViewModel.Therapy
 {
-    class TherapyViewModel : ViewModelBase, ITherapyModel
+    internal class TherapyViewModel : ViewModelBase, ITherapyModel
     {
-        private string _name;
-        public string Name
-        {
-            get { return _name; }
-            set
-            {
-                _name = value;
-                RaisePropertyChanged();
-            }
-        }
-
         private string _anmerkung;
+        private string _name;
+
         public string Anmerkung
         {
             get { return _anmerkung; }
@@ -27,6 +20,16 @@ namespace SoftCareManager.ViewModel.Therapy
             }
         }
 
-        public System.Guid? Id { get; set; }
+        public Guid? Id { get; set; }
+
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                RaisePropertyChanged();
+            }
+        }
     }
 }

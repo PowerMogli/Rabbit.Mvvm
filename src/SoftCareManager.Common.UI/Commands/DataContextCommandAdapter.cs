@@ -28,7 +28,43 @@ namespace SoftCareManager.Common.UI.Commands
     /// </remarks>
     public class DataContextCommandAdapter : MarkupExtension, ICommand
     {
-        private object _target; 
+        private object _target;
+
+        /// <summary>
+        ///     Initializes a new instance of the DataContextCommandAdapter class.
+        /// </summary>
+        public DataContextCommandAdapter()
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="DataContextCommandAdapter"/> class by
+        ///     using the specified method name for the <see cref="Executed"/> property.
+        /// </summary>
+        /// <param name="executed">
+        ///     The name of the <see cref="Executed"/> method.
+        /// </param>
+        public DataContextCommandAdapter(string executed)
+        {
+            Executed = executed;
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="DataContextCommandAdapter"/> class by
+        ///     using the specified method names for the <see cref="Executed"/> and
+        ///     <see cref="CanExecute"/> properties.
+        /// </summary>
+        /// <param name="executed">
+        ///     The name of the <see cref="Executed"/> method.
+        /// </param>
+        /// <param name="canExecute">
+        ///     The name of the <see cref="CanExecute"/> method.
+        /// </param>
+        public DataContextCommandAdapter(string executed, string canExecute)
+        {
+            Executed = executed;
+            CanExecute = canExecute;
+        }
 
         /// <summary>
         ///     Name of the method of the target object's DataContext that determines whether the
@@ -56,40 +92,6 @@ namespace SoftCareManager.Common.UI.Commands
         public string Executed { get; set; }
 
         /// <summary>
-        ///     Initializes a new instance of the DataContextCommandAdapter class.
-        /// </summary>
-        public DataContextCommandAdapter() { }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="DataContextCommandAdapter"/> class by
-        ///     using the specified method name for the <see cref="Executed"/> property.
-        /// </summary>
-        /// <param name="executed">
-        ///     The name of the <see cref="Executed"/> method.
-        /// </param>
-        public DataContextCommandAdapter(string executed)
-        {
-            this.Executed = executed;
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="DataContextCommandAdapter"/> class by
-        ///     using the specified method names for the <see cref="Executed"/> and
-        ///     <see cref="CanExecute"/> properties.
-        /// </summary>
-        /// <param name="executed">
-        ///     The name of the <see cref="Executed"/> method.
-        /// </param>
-        /// <param name="canExecute">
-        ///     The name of the <see cref="CanExecute"/> method.
-        /// </param>
-        public DataContextCommandAdapter(string executed, string canExecute)
-        {
-            this.Executed = executed;
-            this.CanExecute = canExecute;
-        }
-
-        /// <summary>
         ///     Returns an <see cref="ICommand"/> that is capable of executing methods of the
         ///     DataContext of the target.
         /// </summary>
@@ -101,15 +103,17 @@ namespace SoftCareManager.Common.UI.Commands
         /// </returns>
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            var target = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
+            IProvideValueTarget target = serviceProvider.GetService(typeof (IProvideValueTarget)) as IProvideValueTarget;
             if (target == null)
+            {
                 throw new Exception("IProvideValueTarget could not be resolved.");
+            }
 
-            
-            this._target = 
+
+            _target =
                 target.TargetObject is InputBinding
-                ? this.GetInputBindingsCollectionOwner(target)
-                : target.TargetObject;
+                    ? GetInputBindingsCollectionOwner(target)
+                    : target.TargetObject;
 
             return this;
         }
@@ -121,18 +125,22 @@ namespace SoftCareManager.Common.UI.Commands
         // not really a performance issue.
         private object GetInputBindingsCollectionOwner(IProvideValueTarget targetService)
         {
-            var xamlContextField = targetService.GetType().GetField("_xamlContext", BindingFlags.Instance | BindingFlags.NonPublic);
+            FieldInfo xamlContextField = targetService.GetType()
+                                                      .GetField("_xamlContext", BindingFlags.Instance | BindingFlags.NonPublic);
             if (xamlContextField != null)
             {
-                var xamlContext = xamlContextField.GetValue(targetService);
-                var grandParentInstanceProperty = xamlContext.GetType().GetProperty("GrandParentInstance");
+                object xamlContext = xamlContextField.GetValue(targetService);
+                PropertyInfo grandParentInstanceProperty = xamlContext.GetType()
+                                                                      .GetProperty("GrandParentInstance");
                 if (grandParentInstanceProperty != null)
                 {
-                    var inputBindingsCollection = grandParentInstanceProperty.GetGetMethod().Invoke(xamlContext, null);
-                    var ownerField = inputBindingsCollection.GetType().GetField("_owner", BindingFlags.Instance | BindingFlags.NonPublic);
+                    object inputBindingsCollection = grandParentInstanceProperty.GetGetMethod()
+                                                                                .Invoke(xamlContext, null);
+                    FieldInfo ownerField = inputBindingsCollection.GetType()
+                                                                  .GetField("_owner", BindingFlags.Instance | BindingFlags.NonPublic);
                     if (ownerField != null)
                     {
-                        var owner = ownerField.GetValue(inputBindingsCollection);
+                        object owner = ownerField.GetValue(inputBindingsCollection);
                         return owner;
                     }
                 }
@@ -148,37 +156,41 @@ namespace SoftCareManager.Common.UI.Commands
             remove { CommandManager.RequerySuggested -= value; }
         }
 
+        private static object GetDataContext(object element)
+        {
+            FrameworkElement fe = element as FrameworkElement;
+            if (fe != null)
+            {
+                return fe.DataContext;
+            }
+
+            FrameworkContentElement fce = element as FrameworkContentElement;
+            return fce == null
+                ? null
+                : fce.DataContext;
+        }
+
         bool ICommand.CanExecute(object parameter)
         {
-            var target = GetDataContext(this._target);
-            if (this._target != null)
+            object target = GetDataContext(_target);
+            if (_target != null)
             {
                 bool canExecute;
-                if (CommandExecutionManager.TryExecuteCommand(target, parameter, false, this.Executed, this.CanExecute, out canExecute))
+                if (CommandExecutionManager.TryExecuteCommand(target, parameter, false, Executed, CanExecute, out canExecute))
+                {
                     return canExecute;
+                }
             }
             return false;
         }
 
         void ICommand.Execute(object parameter)
         {
-            var target = GetDataContext(this._target);
-            if (this._target != null)
+            object target = GetDataContext(_target);
+            if (_target != null)
             {
                 bool canExecute;
-                CommandExecutionManager.TryExecuteCommand(target, parameter, true, this.Executed, this.CanExecute, out canExecute);
-            }
-        }
-
-        private static object GetDataContext(object element)
-        {
-            var fe = element as FrameworkElement;
-            if (fe != null)
-                return fe.DataContext;
-            else
-            {
-                var fce = element as FrameworkContentElement;
-                return fce == null ? null : fce.DataContext;
+                CommandExecutionManager.TryExecuteCommand(target, parameter, true, Executed, CanExecute, out canExecute);
             }
         }
 

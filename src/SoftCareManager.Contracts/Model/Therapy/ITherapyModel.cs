@@ -2,8 +2,8 @@
 {
     public interface ITherapyModel : IModel
     {
-        string Name { get; set; }
-
         string Anmerkung { get; set; }
+
+        string Name { get; set; }
     }
 }

@@ -6,13 +6,14 @@ namespace SoftCareManager.Contracts.Authorization
     public enum Right
     {
         // Patient
-        AddPatient = 0,
-        DeletePatient = 1,
-        EditPatient = 2,
+        None = 0,
+        AddPatient = 1,
+        DeletePatient = 2,
+        EditPatient = 4,
 
         // Therapy
-        AddTherapy = 4,
-        DeleteTherapy = 8,
-        EditTherapy = 16
+        AddTherapy = 8,
+        DeleteTherapy = 16,
+        EditTherapy = 32
     }
 }

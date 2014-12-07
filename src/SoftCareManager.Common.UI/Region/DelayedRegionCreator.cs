@@ -6,8 +6,13 @@ namespace SoftCareManager.Common.UI.Region
 {
     internal class DelayedRegionCreator
     {
-        private WeakReference elementWeakReference;
-        private bool regionCreated;
+        private WeakReference _elementWeakReference;
+        private bool _regionCreated;
+
+        public DelayedRegionCreator(DependencyObject targetElement)
+        {
+            TargetElement = targetElement;
+        }
 
         /// <summary>
         /// The element that will host the Region. 
@@ -15,13 +20,13 @@ namespace SoftCareManager.Common.UI.Region
         /// <value>The target element.</value>
         public DependencyObject TargetElement
         {
-            get { return this.elementWeakReference != null ? this.elementWeakReference.Target as DependencyObject : null; }
-            set { this.elementWeakReference = new WeakReference(value); }
-        }
-
-        public DelayedRegionCreator(DependencyObject targetElement)
-        {
-            TargetElement = targetElement;
+            get
+            {
+                return _elementWeakReference != null
+                    ? _elementWeakReference.Target as DependencyObject
+                    : null;
+            }
+            set { _elementWeakReference = new WeakReference(value); }
         }
 
         internal void Create()
@@ -38,49 +43,44 @@ namespace SoftCareManager.Common.UI.Region
 
         private void ElementLoaded(object sender, RoutedEventArgs e)
         {
-            this.UnWireTargetElement();
-            this.TryCreateRegion();
-        }
-
-        private void WireUpTargetElement()
-        {
-            FrameworkElement element = this.TargetElement as FrameworkElement;
-            if (element != null)
-            {
-                element.Loaded += this.ElementLoaded;
-            }
-        }
-
-        private void UnWireTargetElement()
-        {
-            FrameworkElement element = this.TargetElement as FrameworkElement;
-            if (element != null)
-            {
-                element.Loaded -= this.ElementLoaded;
-            }
+            UnWireTargetElement();
+            TryCreateRegion();
         }
 
         private void TryCreateRegion()
         {
-            DependencyObject targetElement = this.TargetElement;
-            if (targetElement == null)
+            DependencyObject targetElement = TargetElement;
+
+            if (targetElement == null
+                || !targetElement.CheckAccess()
+                || _regionCreated)
             {
                 return;
             }
 
-            if (targetElement.CheckAccess())
+            string regionName = RegionManager.GetRegionName(TargetElement);
+            Region region = new Region(regionName, -1, TargetElement as ContentControl);
+
+            RegionManagerRegistrator regionManagerRegistrator = new RegionManagerRegistrator();
+            regionManagerRegistrator.Register(region, TargetElement as ContentControl);
+            _regionCreated = true;
+        }
+
+        private void UnWireTargetElement()
+        {
+            FrameworkElement element = TargetElement as FrameworkElement;
+            if (element != null)
             {
-                if (this.regionCreated)
-                {
-                    return;
-                }
+                element.Loaded -= ElementLoaded;
+            }
+        }
 
-                var regionName = RegionManager.GetRegionName(TargetElement);
-                var region = new Region(regionName, -1, TargetElement as ContentControl);
-
-                var regionManagerRegistrator = new RegionManagerRegistrator();
-                regionManagerRegistrator.Register(region, TargetElement as ContentControl);
-                this.regionCreated = true;
+        private void WireUpTargetElement()
+        {
+            FrameworkElement element = TargetElement as FrameworkElement;
+            if (element != null)
+            {
+                element.Loaded += ElementLoaded;
             }
         }
     }

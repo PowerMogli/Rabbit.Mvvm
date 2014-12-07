@@ -1,9 +1,11 @@
-﻿using SoftCareManager.Common.UI.Groups.Base;
+﻿using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Data;
+
+using SoftCareManager.Common.UI.Groups.Base;
 using SoftCareManager.Common.UI.Views.Patient;
 using SoftCareManager.Contracts.Groups.Base;
 using SoftCareManager.Contracts.Groups.Selection;
-using System.Windows;
-using System.Windows.Data;
 
 namespace SoftCareManager.Common.UI.Groups.Selection
 {
@@ -11,46 +13,56 @@ namespace SoftCareManager.Common.UI.Groups.Selection
     {
         private const string BindingPath = "SelectedItem";
 
+        private readonly List<DependencyObject> _selectionSubscriber;
+        private ISelectionPublisher _selectionPublisher;
+
+        public SelectionGroup()
+        {
+            _selectionSubscriber = new List<DependencyObject>();
+        }
+
         public string Name { get; set; }
-
-        public DependencyObject SelectionSubscriber { get; set; }
-
-        public ISelectionPublisher SelectionPublisher { get; set; }
-
-        public void Bind()
-        {
-            if (SelectionPublisher == null
-                || SelectionSubscriber == null)
-            {
-                return;
-            }
-
-            BindingOperations.SetBinding(SelectionSubscriber, BaseActionMenu2.SelectedItemProperty, new Binding(BindingPath)
-            {
-                Source = SelectionPublisher,
-                Mode = BindingMode.OneWay
-            });
-        }
-
-        public void AddSubscriber(DependencyObject dependencyObject)
-        {
-            ISelectionSubscriber selectionSubscriber = dependencyObject as ISelectionSubscriber;
-            if (selectionSubscriber != null)
-            {
-                SelectionSubscriber = dependencyObject;
-            }
-        }
 
         public void AddPublisher(IGroupSource groupSource)
         {
-            var selectionGroupSource = groupSource as ISelectionGroupSource;
+            ISelectionGroupSource selectionGroupSource = groupSource as ISelectionGroupSource;
             if (selectionGroupSource == null
                 || selectionGroupSource.SelectionPublisher == null)
             {
                 return;
             }
 
-            SelectionPublisher = selectionGroupSource.SelectionPublisher;
+            _selectionPublisher = selectionGroupSource.SelectionPublisher;
+        }
+
+        public void AddSubscriber(DependencyObject dependencyObject)
+        {
+            ISelectionSubscriber subscriber = dependencyObject as ISelectionSubscriber;
+            if (subscriber != null)
+            {
+                _selectionSubscriber.Add(dependencyObject);
+            }
+        }
+
+        public void Bind()
+        {
+            if (_selectionPublisher == null
+                || _selectionSubscriber == null)
+            {
+                return;
+            }
+
+            for (var index = _selectionSubscriber.Count - 1; index >= 0; index--)
+            {
+                BindingOperations.ClearBinding(_selectionSubscriber[index], BaseActionMenu2.SelectedItemProperty);
+                BindingOperations.SetBinding(_selectionSubscriber[index], BaseActionMenu2.SelectedItemProperty, new Binding(BindingPath)
+                {
+                    Source = _selectionPublisher,
+                    Mode = BindingMode.OneWay
+                });
+
+                _selectionSubscriber.RemoveAt(index);
+            }
         }
     }
 }

@@ -3,7 +3,7 @@
                     xmlns:vm="clr-namespace:SoftCareManager.ViewModel.Application;assembly=SoftCareManager.ViewModel"
                     xmlns:view="clr-namespace:SoftCareManager.Views.Application.Touch">
 
-    <DataTemplate DataType="{x:Type vm:AppMenuViewModel}" >
+    <DataTemplate DataType="{x:Type vm:AppMenuViewModel}">
         <view:AppMenuView />
     </DataTemplate>
 

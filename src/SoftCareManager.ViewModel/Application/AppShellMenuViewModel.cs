@@ -13,9 +13,9 @@ namespace SoftCareManager.ViewModel.Application
         public override void Initialize(INavigationParameter navigationParameter)
         {
             PatientParameter = new MergedNavigationParameter();
-            PatientParameter.Add(new NavigationParameter(Regions.OverView, typeof(PatientListOverviewViewModel)));
-            PatientParameter.Add(new NavigationParameter(Regions.SubMenuView, typeof(PatientSubMenuViewModel)));
-            PatientParameter.Add(new NavigationParameter(Regions.AppActionMenuView, typeof(PatientListActionMenuViewModel)));
+            PatientParameter.Add(new NavigationParameter(Regions.OverView, typeof (PatientListOverviewViewModel)));
+            PatientParameter.Add(new NavigationParameter(Regions.SubMenuView, typeof (PatientSubMenuViewModel)));
+            PatientParameter.Add(new NavigationParameter(Regions.AppActionMenuView, typeof (PatientListActionMenuViewModel)));
 
             CanBeActivated = !CanBeActivated;
         }

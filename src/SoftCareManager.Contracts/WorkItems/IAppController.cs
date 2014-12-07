@@ -1,27 +1,28 @@
-﻿using SoftCareManager.Contracts.Services;
+﻿using System;
+
+using SoftCareManager.Contracts.Services;
 using SoftCareManager.Contracts.ViewModel;
-using System;
 
 namespace SoftCareManager.Contracts.WorkItems
 {
     public interface IAppController
     {
+        event EventHandler InitializationCompleted;
+
+        ViewModelBase BuildViewModel(Type viewModelType);
+
+        void Execute();
+
         TService GetService<TService>()
             where TService : IService;
+
+        object GetService(Type serviceType);
 
         TWorkItem GetWorkItem<TWorkItem>()
             where TWorkItem : IWorkItem;
 
         object GetWorkItem(Type workItemType);
 
-        object GetService(Type serviceType);
-
         void RegisterOnEventBroker(object item);
-
-        ViewModelBase BuildViewModel(Type viewModelType);
-
-        void Execute();
-
-        event EventHandler InitializationCompleted;
     }
 }

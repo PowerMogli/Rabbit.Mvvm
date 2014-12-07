@@ -43,6 +43,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\RightVisibilityConverter.cs" />
     <Compile Include="Authorization\UIVisibilityBinder.cs" />
     <Compile Include="Commands\ApplicationCommands.cs" />
     <Compile Include="Commands\CommandExecutionManager.cs" />
@@ -53,11 +54,13 @@
     <Compile Include="Commands\RoutedCommandMonitor.cs" />
     <Compile Include="Controls\RegionControl.cs" />
     <Compile Include="Groups\Base\BaseGroupManager.cs" />
+    <Compile Include="Groups\Base\BaseGroupSourceExtension.cs" />
     <Compile Include="Groups\Base\IBaseGroupManager.cs" />
     <Compile Include="Groups\Base\IGroup.cs" />
     <Compile Include="Groups\Items\ItemsGroup.cs" />
     <Compile Include="Groups\Items\ItemsGroupManager.cs" />
     <Compile Include="Groups\Items\ItemsGroupSource.cs" />
+    <Compile Include="Groups\Items\ItemsGroupSourceExtension.cs" />
     <Compile Include="Groups\Selection\SelectionGroup.cs" />
     <Compile Include="Groups\Selection\SelectionGroupManager.cs" />
     <Compile Include="Groups\Selection\SelectionGroupSource.cs" />
@@ -72,14 +75,16 @@
     <Compile Include="Views\Patient\BaseActionMenu2.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SoftCareManager.Common\SoftCareManager.Common.csproj">
+      <Project>{29e176bd-58df-4b84-aa64-ada5bf20cbfb}</Project>
+      <Name>SoftCareManager.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SoftCareManager.Contracts\SoftCareManager.Contracts.csproj">
       <Project>{44aa4749-6bc7-4866-bb31-7a9c32668517}</Project>
       <Name>SoftCareManager.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Region\Handler\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(ProjectDir)bin\Debug\SoftCareManager.Common.UI.dll" "$(SolutionDir)Dlls\" /Y /I</PostBuildEvent>

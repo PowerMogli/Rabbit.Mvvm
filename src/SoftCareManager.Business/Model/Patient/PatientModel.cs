@@ -1,20 +1,20 @@
-﻿using SoftCareManager.Contracts.Model.Patient;
-using SoftCareManager.Contracts.Model.Therapy;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
+
+using SoftCareManager.Contracts.Model.Patient;
+using SoftCareManager.Contracts.Model.Therapy;
 
 namespace SoftCareManager.Business.Model.Patient
 {
     public class PatientModel : IPatientModel
     {
-        public string LastName { get; set; }
+        public DateTime Birthday { get; set; }
 
         public string FirstName { get; set; }
 
-        public DateTime Birthday { get; set; }
-
         public Guid? Id { get; set; }
+
+        public string LastName { get; set; }
 
         public ObservableCollection<ITherapyModel> Therapies { get; set; }
     }

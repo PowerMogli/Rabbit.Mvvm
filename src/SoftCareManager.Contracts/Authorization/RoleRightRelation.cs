@@ -1,14 +1,20 @@
-﻿using SoftCareManager.Contracts.General;
+﻿using System.Collections.Generic;
 using System.Linq;
+
+using SoftCareManager.Contracts.General;
 
 namespace SoftCareManager.Contracts.Authorization
 {
     public class RoleRightRelation : ObservableObject
     {
-        public Role Roles { get; private set; }
-        public Right Right { get; private set; }
-
         private bool _isVisible;
+
+        public RoleRightRelation(Role roles, Right right)
+        {
+            Roles = roles;
+            Right = right;
+        }
+
         public bool IsVisible
         {
             get { return _isVisible; }
@@ -19,16 +25,14 @@ namespace SoftCareManager.Contracts.Authorization
             }
         }
 
-        public RoleRightRelation(Role roles, Right right)
-        {
-            this.Roles |= roles;
-            this.Right = right;
-        }
+        public Right Right { get; private set; }
+
+        public Role Roles { get; private set; }
 
         public void SetVisibility(IUser user)
         {
             IsVisible = IsUserInAnyRoles(user.Roles)
-                && HasUserRights(user.Rights);
+                        && HasUserRights(user.Rights);
         }
 
         private bool HasUserRights(Right userRights)
@@ -38,7 +42,7 @@ namespace SoftCareManager.Contracts.Authorization
 
         private bool IsUserInAnyRoles(Role userRoles)
         {
-            var flags = Roles.GetFlags();
+            IEnumerable<Role> flags = Roles.GetFlags();
             return flags.Any(flag => userRoles.HasFlag(flag));
         }
     }

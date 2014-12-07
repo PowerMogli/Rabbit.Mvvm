@@ -21,12 +21,12 @@
         <view:AppShellView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type vm:AppShellMenuViewModel}" >
+    <DataTemplate DataType="{x:Type vm:AppShellMenuViewModel}">
         <view:AppShellMenuView />
     </DataTemplate>
 
     <!-- Patient-Views -->
-    <DataTemplate DataType="{x:Type patient:PatientListOverviewViewModel}" >
+    <DataTemplate DataType="{x:Type patient:PatientListOverviewViewModel}">
         <view:PatientListOverviewView />
     </DataTemplate>
 
@@ -35,10 +35,10 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type vmPatient:PatientSubMenuViewModel}">
-        <viewPatient:PatientenSubMenuView Margin="5,8"/>
+        <viewPatient:PatientenSubMenuView Margin="5,8" />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type vmPatient:PatientStammdatenViewModel}" >
+    <DataTemplate DataType="{x:Type vmPatient:PatientStammdatenViewModel}">
         <viewPatient:PatientStammdatenView />
     </DataTemplate>
 

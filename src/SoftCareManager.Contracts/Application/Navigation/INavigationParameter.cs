@@ -5,20 +5,20 @@ namespace SoftCareManager.Contracts.Application.Navigation
 {
     public interface INavigationParameter
     {
-        bool StayVisible { get; }
-
-        int ShellId { get; }
+        Dictionary<string, object> Parameter { get; }
 
         string RegionName { get; }
 
+        int ShellId { get; }
+
+        bool StayVisible { get; }
+
         Type ViewModelType { get; }
-
-        Dictionary<string, object> Parameter { get; }
-
-        INavigationParameter SetStayVisible(bool stayVisible);
 
         INavigationParameter SetParameter(KeyValuePair<string, object>[] parameter);
 
         INavigationParameter SetShellId(int shellId);
+
+        INavigationParameter SetStayVisible(bool stayVisible);
     }
 }

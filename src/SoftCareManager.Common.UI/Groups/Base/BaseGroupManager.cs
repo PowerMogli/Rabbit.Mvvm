@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+
 using SoftCareManager.Contracts.Groups.Base;
 
 namespace SoftCareManager.Common.UI.Groups.Base
@@ -15,20 +16,9 @@ namespace SoftCareManager.Common.UI.Groups.Base
             _groups = new Dictionary<string, TGroup>();
         }
 
-        public TGroup AddSubscriber(string groupName, DependencyObject dependencyObject)
-        {
-            var group = GetGroup(groupName);
-
-            group = AddGroup(groupName, group);
-
-            group.AddSubscriber(dependencyObject);
-
-            return group;
-        }
-
         public TGroup AddPublisher(TGroupSource groupSource)
         {
-            var group = GetGroup(groupSource.GroupName);
+            TGroup group = GetGroup(groupSource.GroupName);
 
             group = AddGroup(groupSource.GroupName, group);
 
@@ -37,11 +27,28 @@ namespace SoftCareManager.Common.UI.Groups.Base
             return group;
         }
 
+        public TGroup AddSubscriber(string groupName, DependencyObject dependencyObject)
+        {
+            TGroup group = GetGroup(groupName);
+
+            group = AddGroup(groupName, group);
+
+            group.AddSubscriber(dependencyObject);
+
+            return group;
+        }
+
         private TGroup AddGroup(string groupName, TGroup group)
         {
-            if (@group != null) return @group;
+            if (@group != null)
+            {
+                return @group;
+            }
 
-            @group = new TGroup { Name = groupName };
+            @group = new TGroup
+            {
+                Name = groupName
+            };
 
             _groups.Add(groupName, @group);
 
@@ -50,7 +57,7 @@ namespace SoftCareManager.Common.UI.Groups.Base
 
         private TGroup GetGroup(string groupName)
         {
-            var group = default(TGroup);
+            TGroup group = default(TGroup);
 
             if (_groups.ContainsKey(groupName))
             {

@@ -1,33 +1,38 @@
-﻿using SoftCareManager.Contracts.WorkItems;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 
-namespace SoftCareManager.Business.Services
+using SoftCareManager.Contracts.WorkItems;
+
+namespace SoftCareManager.Business.WorkItems
 {
-    [Export(typeof(IWorkItemProvider))]
+    [Export(typeof (IWorkItemProvider))]
     public class WorkItemProvider : IWorkItemProvider
     {
         [ImportMany]
-        IEnumerable<Lazy<IWorkItem, IWorkItemMetaData>> WorkItems { get; set; }
+        private IEnumerable<Lazy<IWorkItem, IWorkItemMetaData>> WorkItems { get; set; }
 
         public TWorkItem Get<TWorkItem>() where TWorkItem : IWorkItem
         {
-            var lazyWorkItem = (from workItem in WorkItems
-                                where workItem.Metadata.WorkItemName.Equals(typeof(TWorkItem).Name)
-                                select workItem).FirstOrDefault();
+            Lazy<IWorkItem, IWorkItemMetaData> lazyWorkItem = (from workItem in WorkItems
+                                                               where workItem.Metadata.WorkItemName.Equals(typeof (TWorkItem).Name)
+                                                               select workItem).FirstOrDefault();
 
-            return (TWorkItem)lazyWorkItem.Value;
+            return lazyWorkItem != null
+                ? (TWorkItem)lazyWorkItem.Value
+                : default(TWorkItem);
         }
 
         public object Get(Type workItemType)
         {
-            var lazyWorkItem = (from workItem in WorkItems
-                                where workItem.Metadata.WorkItemType == workItemType
-                                select workItem).FirstOrDefault();
+            Lazy<IWorkItem, IWorkItemMetaData> lazyWorkItem = (from workItem in WorkItems
+                                                               where workItem.Metadata.WorkItemType == workItemType
+                                                               select workItem).FirstOrDefault();
 
-            return lazyWorkItem.Value;
+            return lazyWorkItem != null
+                ? lazyWorkItem.Value
+                : null;
         }
     }
 }

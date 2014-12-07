@@ -1,29 +1,32 @@
-﻿using SoftCareManager.Contracts.Application.Navigation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using SoftCareManager.Contracts.Application.Navigation;
 
 namespace SoftCareManager.Common
 {
     public class NavigationParameter : INavigationParameter
     {
-        protected NavigationParameter()
-        {
-
-        }
-
         public NavigationParameter(string regionName, Type viewModelType)
         {
             RegionName = regionName;
             ViewModelType = viewModelType;
         }
 
-        public INavigationParameter SetStayVisible(bool stayVisible)
+        protected NavigationParameter()
         {
-            StayVisible = stayVisible;
-
-            return this;
         }
+
+        public Dictionary<string, object> Parameter { get; private set; }
+
+        public string RegionName { get; private set; }
+
+        public virtual int ShellId { get; protected set; }
+
+        public bool StayVisible { get; private set; }
+
+        public Type ViewModelType { get; private set; }
 
         public INavigationParameter SetParameter(KeyValuePair<string, object>[] parameter)
         {
@@ -39,14 +42,11 @@ namespace SoftCareManager.Common
             return this;
         }
 
-        public string RegionName { get; private set; }
+        public INavigationParameter SetStayVisible(bool stayVisible)
+        {
+            StayVisible = stayVisible;
 
-        public Type ViewModelType { get; private set; }
-
-        public Dictionary<string, object> Parameter { get; private set; }
-
-        public bool StayVisible { get; private set; }
-
-        public virtual int ShellId { get; protected set; }
+            return this;
+        }
     }
 }

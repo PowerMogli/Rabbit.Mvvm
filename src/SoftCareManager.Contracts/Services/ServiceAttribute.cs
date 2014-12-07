@@ -8,13 +8,12 @@ namespace SoftCareManager.Contracts.Services
     public class ServiceAttribute : InheritedExportAttribute
     {
         public ServiceAttribute()
-            : base(typeof(IService))
+            : base(typeof (IService))
         {
-
         }
 
-        public Type ServiceType { get; set; }
-
         public string ServiceName { get; set; }
+
+        public Type ServiceType { get; set; }
     }
 }

@@ -55,6 +55,7 @@
     <Compile Include="Application\Region\IRegion.cs" />
     <Compile Include="Application\Region\IRegionManager.cs" />
     <Compile Include="Application\Region\IRegionViewLifeTime.cs" />
+    <Compile Include="Authorization\IUIVisibilityBinder.cs" />
     <Compile Include="Authorization\IUser.cs" />
     <Compile Include="Authorization\Right.cs" />
     <Compile Include="Authorization\Role.cs" />

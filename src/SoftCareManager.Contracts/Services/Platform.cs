@@ -1,5 +1,4 @@
-﻿
-namespace SoftCareManager.Contracts.Services
+﻿namespace SoftCareManager.Contracts.Services
 {
     public enum Platform
     {

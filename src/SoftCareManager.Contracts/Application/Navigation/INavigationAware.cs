@@ -1,5 +1,4 @@
-﻿
-namespace SoftCareManager.Contracts.Application.Navigation
+﻿namespace SoftCareManager.Contracts.Application.Navigation
 {
     public interface INavigationAware
     {

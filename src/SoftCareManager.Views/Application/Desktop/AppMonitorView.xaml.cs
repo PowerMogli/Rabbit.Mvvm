@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace SoftCareManager.Views.Application.Desktop
+﻿namespace SoftCareManager.Views.Application.Desktop
 {
     /// <summary>
     /// Interaction logic for MonitorView.xaml

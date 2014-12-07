@@ -4,14 +4,18 @@
              xmlns:rm="clr-namespace:SoftCareManager.Common.UI.Region;assembly=SoftCareManager.Common.UI"
              xmlns:custom="clr-namespace:SoftCareManager.Common.UI.Controls;assembly=SoftCareManager.Common.UI"
              xmlns:regions="clr-namespace:SoftCareManager.Contracts.General;assembly=SoftCareManager.Contracts"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <DockPanel >
-        <custom:RegionControl DockPanel.Dock="Left" ShellId="{Binding ShellId}" RegionName="{x:Static regions:Regions.AppShellMenuView}" />
-        <custom:RegionControl DockPanel.Dock="Right" ShellId="{Binding ShellId}" RegionName="{x:Static regions:Regions.AppActionMenuView}" />
-        <custom:RegionControl DockPanel.Dock="Top" ShellId="{Binding ShellId}" RegionName="{x:Static regions:Regions.SubMenuView}" />
-        <custom:RegionControl DockPanel.Dock="Bottom" ShellId="{Binding ShellId}" RegionName="{x:Static regions:Regions.OverView}" />
+    <DockPanel>
+        <custom:RegionControl DockPanel.Dock="Left" ShellId="{Binding ShellId}"
+                              RegionName="{x:Static regions:Regions.AppShellMenuView}" />
+        <custom:RegionControl DockPanel.Dock="Right" ShellId="{Binding ShellId}"
+                              RegionName="{x:Static regions:Regions.AppActionMenuView}" />
+        <custom:RegionControl DockPanel.Dock="Top" ShellId="{Binding ShellId}"
+                              RegionName="{x:Static regions:Regions.SubMenuView}" />
+        <custom:RegionControl DockPanel.Dock="Bottom" ShellId="{Binding ShellId}"
+                              RegionName="{x:Static regions:Regions.OverView}" />
     </DockPanel>
 </UserControl>

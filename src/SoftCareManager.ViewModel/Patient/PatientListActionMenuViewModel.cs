@@ -1,16 +1,31 @@
-﻿using SoftCareManager.Business.WorkItems.Patient;
+﻿using System;
+using System.Collections.ObjectModel;
+
+using SoftCareManager.Business.WorkItems.Patient;
 using SoftCareManager.Contracts.Application.Navigation;
 using SoftCareManager.Contracts.Groups.Items;
 using SoftCareManager.Contracts.Groups.Selection;
 using SoftCareManager.Contracts.Model.Patient;
 using SoftCareManager.Contracts.ViewModel;
-using System;
-using System.Collections.ObjectModel;
 
 namespace SoftCareManager.ViewModel.Patient
 {
     public class PatientListActionMenuViewModel : ViewModelBase, ISelectionSubscriber<IPatientModel>, IItemsSubscriber
     {
+        public ObservableCollection<object> Items { get; set; }
+
+        public IPatientModel SelectedItem { get; set; }
+
+        #region ISelectionSubscriber
+
+        object ISelectionSubscriber.SelectedItem
+        {
+            get { return SelectedItem; }
+            set { SelectedItem = (IPatientModel)value; }
+        }
+
+        #endregion
+
         public override void Initialize(INavigationParameter navigationParameter)
         {
             base.Initialize(navigationParameter);
@@ -18,19 +33,14 @@ namespace SoftCareManager.ViewModel.Patient
             CanBeActivated = true;
         }
 
-        public bool CanEdit()
-        {
-            return SelectedItem != null;
-        }
-
-        public void Edit()
-        {
-            SelectedItem.LastName = "Test";
-        }
-
         public bool CanCreate()
         {
             return Items != null;
+        }
+
+        public bool CanEdit()
+        {
+            return SelectedItem != null;
         }
 
         public void Create()
@@ -43,17 +53,9 @@ namespace SoftCareManager.ViewModel.Patient
             });
         }
 
-        public IPatientModel SelectedItem { get; set; }
-
-        public ObservableCollection<object> Items { get; set; }
-
-        #region ISelectionSubscriber
-        object ISelectionSubscriber.SelectedItem
+        public void Edit()
         {
-            get { return SelectedItem; }
-            set { SelectedItem = (IPatientModel)value; }
+            SelectedItem.LastName = "Test";
         }
-
-        #endregion
     }
 }

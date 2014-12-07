@@ -1,7 +1,8 @@
-﻿using SoftCareManager.Contracts.Application.Navigation;
+﻿using System;
+
+using SoftCareManager.Contracts.Application.Navigation;
 using SoftCareManager.Contracts.Application.Region;
 using SoftCareManager.Contracts.ViewModel;
-using System;
 
 namespace SoftCareManager.Contracts.Services
 {

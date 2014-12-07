@@ -1,6 +1,7 @@
-﻿using SoftCareManager.Contracts.Services;
+﻿using System;
+
+using SoftCareManager.Contracts.Services;
 using SoftCareManager.Contracts.WorkItems;
-using System;
 
 namespace SoftCareManager.Contracts.Application.Navigation
 {

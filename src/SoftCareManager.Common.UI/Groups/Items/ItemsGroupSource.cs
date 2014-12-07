@@ -10,8 +10,8 @@ namespace SoftCareManager.Common.UI.Groups.Items
             ItemsPublisher = itemsPublisher;
         }
 
-        public IItemsPublisher ItemsPublisher { get; private set; }
-
         public string GroupName { get; private set; }
+
+        public IItemsPublisher ItemsPublisher { get; private set; }
     }
 }

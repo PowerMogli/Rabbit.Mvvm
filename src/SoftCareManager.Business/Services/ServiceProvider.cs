@@ -1,34 +1,38 @@
-﻿using SoftCareManager.Contracts.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+
 using Service = SoftCareManager.Contracts.Services;
 
 namespace SoftCareManager.Business.Services
 {
-    [Export(typeof(Service.IServiceProvider))]
+    [Export(typeof (Service.IServiceProvider))]
     public class ServiceProvider : Service.IServiceProvider
     {
         [ImportMany]
-        IEnumerable<Lazy<IService, IServiceMetaData>> Services { get; set; }
+        private IEnumerable<Lazy<Service.IService, Service.IServiceMetaData>> Services { get; set; }
 
-        public TService GetService<TService>() where TService : IService
+        public TService GetService<TService>() where TService : Service.IService
         {
-            var exportedService = (from service in Services
-                                   where service.Metadata.ServiceName.Equals(typeof(TService).Name)
-                                   select service).FirstOrDefault();
+            Lazy<Service.IService, Service.IServiceMetaData> exportedService = (from service in Services
+                                                                                where service.Metadata.ServiceName.Equals(typeof (TService).Name)
+                                                                                select service).FirstOrDefault();
 
-            return (TService)exportedService.Value;
+            return exportedService != null
+                ? (TService)exportedService.Value
+                : default(TService);
         }
 
         public object GetService(Type serviceType)
         {
-            var exportedService = (from service in Services
-                                   where service.Metadata.ServiceType.Equals(serviceType)
-                                   select service).FirstOrDefault();
+            Lazy<Service.IService, Service.IServiceMetaData> exportedService = (from service in Services
+                                                                                where service.Metadata.ServiceType == serviceType
+                                                                                select service).FirstOrDefault();
 
-            return exportedService.Value;
+            return exportedService != null
+                ? exportedService.Value
+                : null;
         }
     }
 }

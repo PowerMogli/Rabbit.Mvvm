@@ -1,5 +1,4 @@
-﻿
-namespace SoftCareManager.Contracts.Application.Region
+﻿namespace SoftCareManager.Contracts.Application.Region
 {
     public interface IRegionViewLifeTime
     {

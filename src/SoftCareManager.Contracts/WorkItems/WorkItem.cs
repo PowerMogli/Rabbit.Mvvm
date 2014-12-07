@@ -1,5 +1,4 @@
 ﻿using SoftCareManager.Contracts.Model;
-using SoftCareManager.Contracts.ViewModel;
 
 namespace SoftCareManager.Contracts.WorkItems
 {

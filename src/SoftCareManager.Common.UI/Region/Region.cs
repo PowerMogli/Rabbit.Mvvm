@@ -1,40 +1,38 @@
-﻿using SoftCareManager.Contracts.Application.Region;
-using SoftCareManager.Contracts.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Controls;
 
+using SoftCareManager.Contracts.Application.Region;
+using SoftCareManager.Contracts.ViewModel;
+
 namespace SoftCareManager.Common.UI.Region
 {
     public class Region : IRegion
     {
-        private string name;
+        private readonly ContentControl _hostControl;
 
-        private ContentControl hostControl;
-
-        List<object> viewContents;
+        private readonly List<object> _viewContents;
+        private string _name;
 
         public Region(string name, int shellId, ContentControl hostControl)
         {
             Name = name;
             ShellId = shellId;
 
-            this.hostControl = hostControl;
-            viewContents = new List<object>();
+            _hostControl = hostControl;
+            _viewContents = new List<object>();
         }
-
-        public int ShellId { get; private set; }
 
         public string Name
         {
-            get { return name; }
+            get { return _name; }
             private set
             {
-                if (this.name != null && this.name != value)
+                if (_name != null && _name != value)
                 {
-                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Der Name der Region darf nicht NULL sein.", this.name));
+                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Der Name der Region darf nicht NULL sein.", _name));
                 }
 
                 if (string.IsNullOrEmpty(value))
@@ -42,9 +40,11 @@ namespace SoftCareManager.Common.UI.Region
                     throw new ArgumentException("Der Name der Region darf nicht leer sein.");
                 }
 
-                this.name = value;
+                _name = value;
             }
         }
+
+        public int ShellId { get; private set; }
 
         public void Activate(ViewModelBase viewModel)
         {
@@ -53,39 +53,41 @@ namespace SoftCareManager.Common.UI.Region
             SetContentOfHostControl(viewModel);
 
             if (viewModel.CanBeActivated
-                && viewContents.Any(content => content.GetType() == viewModel.GetType()) == false)
+                && _viewContents.Any(content => content.GetType() == viewModel.GetType()) == false)
             {
-                viewContents.Add(viewModel);
+                _viewContents.Add(viewModel);
             }
         }
 
-        private void SetContentOfHostControl(ViewModelBase viewModel)
+        public ViewModelBase GetContent(Type viewModelType)
         {
-            // To change skin if user selected touch skin
-            hostControl.Content = null;
+            if (_hostControl.Content != null && _hostControl.Content.GetType() == viewModelType)
+            {
+                return _hostControl.Content as ViewModelBase;
+            }
 
-            hostControl.Content = viewModel.CanBeActivated ? viewModel : null;
+            return _viewContents.SingleOrDefault(content => content.GetType() == viewModelType) as ViewModelBase;
         }
 
         private void RemoveActive(Type viewModelType)
         {
-            var activeContent = GetContent(viewModelType) as IRegionViewLifeTime;
+            IRegionViewLifeTime activeContent = GetContent(viewModelType) as IRegionViewLifeTime;
             if (activeContent == null || activeContent.KeepAlive)
             {
                 return;
             }
 
-            viewContents.Remove(activeContent);
+            _viewContents.Remove(activeContent);
         }
 
-        public ViewModelBase GetContent(Type viewModelType)
+        private void SetContentOfHostControl(ViewModelBase viewModel)
         {
-            if (hostControl.Content != null && hostControl.Content.GetType() == viewModelType)
-            {
-                return hostControl.Content as ViewModelBase;
-            }
+            // To change skin if user selected touch skin
+            _hostControl.Content = null;
 
-            return viewContents.SingleOrDefault(content => content.GetType() == viewModelType) as ViewModelBase;
+            _hostControl.Content = viewModel.CanBeActivated
+                ? viewModel
+                : null;
         }
     }
 }
