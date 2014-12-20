@@ -1,27 +1,28 @@
-﻿using SoftCareManager.Common.UI.Groups.Base;
-using SoftCareManager.Contracts.Groups.Selection;
-using System;
+﻿using System;
 using System.Windows.Markup;
+
+using SoftCareManager.Common.UI.Groups.Base;
+using SoftCareManager.Contracts.Groups.Selection;
 
 namespace SoftCareManager.Common.UI.Groups.Selection
 {
-    [MarkupExtensionReturnType(typeof(SelectionGroupSource))]
+    [MarkupExtensionReturnType(typeof (SelectionGroupSource))]
     public class SelectionGroupSourceExtension : BaseGroupSourceExtension<SelectionGroupSource>
     {
         public SelectionGroupSourceExtension()
+            : this(string.Empty)
         {
-            _groupSource = new Lazy<SelectionGroupSource>(() => new SelectionGroupSource(GroupName, _dataContext as ISelectionPublisher));
         }
 
         public SelectionGroupSourceExtension(string groupName)
-            : this()
+            : base(groupName)
         {
-            GroupName = groupName;
+            GroupSource = new Lazy<SelectionGroupSource>(() => new SelectionGroupSource(GroupName, DataContext as ISelectionPublisher));
         }
 
         protected override void OnDataContextFound()
         {
-            SelectionGroupManager.SetSelectionGroupSource(_targetObject, _groupSource.Value);
+            SelectionGroupManager.SetSelectionGroupSource(TargetObject, GroupSource.Value);
         }
     }
 }

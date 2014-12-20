@@ -74,7 +74,7 @@ namespace SoftCareManager.Common.UI.Region
             EventHandler handler = Initialized;
             if (handler != null)
             {
-                handler(this, EventArgs.Empty);
+                handler(this, System.EventArgs.Empty);
             }
         }
 

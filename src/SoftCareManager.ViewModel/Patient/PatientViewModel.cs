@@ -10,23 +10,14 @@ namespace SoftCareManager.ViewModel.Patient
 {
     public class PatientViewModel : ViewModelBase, IPatientModel
     {
-        private readonly IPatientTherapyWorkItem _patientTherapyWorkItem;
         private DateTime _birthday;
         private string _firstName;
         private string _lastName;
-        private IPatientArticleWorkItem _patientArticleWorkItem;
-        private IPatientHospitalWorkItem _patientHospitalWorkItem;
-        private IPatientInsuranceWorkItem _patientInsuranceWorkItem;
+        private readonly IPatientWorkItemFactory _patientWorkItemFactory;
 
-        public PatientViewModel(IPatientArticleWorkItem patientArticleWorkItem,
-                                IPatientHospitalWorkItem patientHospitalWorkItem,
-                                IPatientInsuranceWorkItem patientInsuranceWorkItem,
-                                IPatientTherapyWorkItem patientTherapyWorkItem)
+        public PatientViewModel(IPatientWorkItemFactory patientWorkItemFactory)
         {
-            _patientArticleWorkItem = patientArticleWorkItem;
-            _patientHospitalWorkItem = patientHospitalWorkItem;
-            _patientInsuranceWorkItem = patientInsuranceWorkItem;
-            _patientTherapyWorkItem = patientTherapyWorkItem;
+            _patientWorkItemFactory = patientWorkItemFactory;
 
             LoadTherapies();
         }
@@ -67,7 +58,7 @@ namespace SoftCareManager.ViewModel.Patient
 
         private void LoadTherapies()
         {
-            Therapies = _patientTherapyWorkItem.LoadTherapies(Id);
+            Therapies = _patientWorkItemFactory.TherapyWorkItem.LoadTherapies(Id);
         }
     }
 }

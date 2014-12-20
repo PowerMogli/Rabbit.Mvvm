@@ -8,8 +8,8 @@ namespace SoftCareManager.Common.UI.Groups.Base
         where TGroup : IGroup
         where TGroupSource : IGroupSource
     {
-        TGroup AddPublisher(TGroupSource groupSource);
+        void AddPublisher(TGroupSource groupSource, FrameworkElement frameworkElement);
 
-        TGroup AddSubscriber(string groupName, DependencyObject dependencyObject);
+        void AddSubscriber(string groupName, FrameworkElement frameworkElement);
     }
 }

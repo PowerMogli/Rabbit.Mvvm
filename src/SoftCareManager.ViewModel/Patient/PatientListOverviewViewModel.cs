@@ -90,11 +90,7 @@ namespace SoftCareManager.ViewModel.Patient
 
             foreach (var patientModel in patientModels)
             {
-                PatientViewModel patientViewModel = new PatientViewModel(
-                    new PatientArticleWorkItem(_appController),
-                    new PatientHospitalWorkItem(_appController),
-                    new PatientInsuranceWorkItem(_appController),
-                    new PatientTherapyWorkItem())
+                PatientViewModel patientViewModel = new PatientViewModel(new PatientWorkItemFactory(_appController))
                 {
                     Id = patientModel.Id,
                     LastName = patientModel.LastName,

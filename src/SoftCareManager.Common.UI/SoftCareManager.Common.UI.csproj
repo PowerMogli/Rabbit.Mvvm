@@ -53,8 +53,11 @@
     <Compile Include="Commands\RoutedCommandBinding.cs" />
     <Compile Include="Commands\RoutedCommandMonitor.cs" />
     <Compile Include="Controls\RegionControl.cs" />
+    <Compile Include="Controls\ShellIdReader.cs" />
+    <Compile Include="Controls\UIHelper.cs" />
     <Compile Include="Groups\Base\BaseGroupManager.cs" />
     <Compile Include="Groups\Base\BaseGroupSourceExtension.cs" />
+    <Compile Include="Groups\Base\GroupShellRelation.cs" />
     <Compile Include="Groups\Base\IBaseGroupManager.cs" />
     <Compile Include="Groups\Base\IGroup.cs" />
     <Compile Include="Groups\Items\ItemsGroup.cs" />
@@ -87,7 +90,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)bin\Debug\SoftCareManager.Common.UI.dll" "$(SolutionDir)Dlls\" /Y /I</PostBuildEvent>
+    <PostBuildEvent>start xcopy "$(ProjectDir)bin\Debug\SoftCareManager.Common.UI.dll" "$(SolutionDir)Dlls\" /Y /I</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

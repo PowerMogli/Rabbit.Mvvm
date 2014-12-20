@@ -1,25 +1,26 @@
-﻿using SoftCareManager.Common.UI.Groups.Base;
+﻿using System;
+
+using SoftCareManager.Common.UI.Groups.Base;
 using SoftCareManager.Contracts.Groups.Items;
-using System;
 
 namespace SoftCareManager.Common.UI.Groups.Items
 {
     public class ItemsGroupSourceExtension : BaseGroupSourceExtension<ItemsGroupSource>
     {
         public ItemsGroupSourceExtension()
+            : this(string.Empty)
         {
-            _groupSource = new Lazy<ItemsGroupSource>(() => new ItemsGroupSource(GroupName, _dataContext as IItemsPublisher));
         }
 
         public ItemsGroupSourceExtension(string groupName)
-            : this()
+            : base(groupName)
         {
-            GroupName = groupName;
+            GroupSource = new Lazy<ItemsGroupSource>(() => new ItemsGroupSource(GroupName, DataContext as IItemsPublisher));
         }
 
         protected override void OnDataContextFound()
         {
-            ItemsGroupManager.SetItemsGroupSource(_targetObject, _groupSource.Value);
+            ItemsGroupManager.SetItemsGroupSource(TargetObject, GroupSource.Value);
         }
     }
 }

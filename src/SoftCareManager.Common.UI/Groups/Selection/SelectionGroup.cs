@@ -11,8 +11,6 @@ namespace SoftCareManager.Common.UI.Groups.Selection
 {
     public class SelectionGroup : IGroup
     {
-        private const string BindingPath = "SelectedItem";
-
         private readonly List<DependencyObject> _selectionSubscriber;
         private ISelectionPublisher _selectionPublisher;
 
@@ -55,7 +53,7 @@ namespace SoftCareManager.Common.UI.Groups.Selection
             for (var index = _selectionSubscriber.Count - 1; index >= 0; index--)
             {
                 BindingOperations.ClearBinding(_selectionSubscriber[index], BaseActionMenu2.SelectedItemProperty);
-                BindingOperations.SetBinding(_selectionSubscriber[index], BaseActionMenu2.SelectedItemProperty, new Binding(BindingPath)
+                BindingOperations.SetBinding(_selectionSubscriber[index], BaseActionMenu2.SelectedItemProperty, new Binding("SelectedItem")
                 {
                     Source = _selectionPublisher,
                     Mode = BindingMode.OneWay

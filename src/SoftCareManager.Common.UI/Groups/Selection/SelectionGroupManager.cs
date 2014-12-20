@@ -2,20 +2,21 @@
 using System.Windows;
 
 using SoftCareManager.Common.UI.Groups.Base;
+using SoftCareManager.Common.UI.Controls;
 
 namespace SoftCareManager.Common.UI.Groups.Selection
 {
-    [Export(typeof (IBaseGroupManager<SelectionGroup, SelectionGroupSource>))]
+    [Export(typeof(IBaseGroupManager<SelectionGroup, SelectionGroupSource>))]
     public class SelectionGroupManager : BaseGroupManager<SelectionGroup, SelectionGroupSource>
     {
         public static readonly DependencyProperty SelectionGroupManagerProperty =
-            DependencyProperty.RegisterAttached("SelectionGroupManager", typeof (IBaseGroupManager<SelectionGroup, SelectionGroupSource>), typeof (SelectionGroupManager), new PropertyMetadata(null));
+            DependencyProperty.RegisterAttached("SelectionGroupManager", typeof(IBaseGroupManager<SelectionGroup, SelectionGroupSource>), typeof(SelectionGroupManager), new PropertyMetadata(null));
 
         public static readonly DependencyProperty SelectionGroupNameProperty =
-            DependencyProperty.RegisterAttached("SelectionGroupName", typeof (string), typeof (SelectionGroupManager), new PropertyMetadata(string.Empty, OnSelectionGroupNamePropertyChanged));
+            DependencyProperty.RegisterAttached("SelectionGroupName", typeof(string), typeof(SelectionGroupManager), new PropertyMetadata(string.Empty, OnSelectionGroupNamePropertyChanged));
 
         public static readonly DependencyProperty SelectionGroupSourceProperty =
-            DependencyProperty.RegisterAttached("SelectionGroupSource", typeof (SelectionGroupSource), typeof (SelectionGroupManager), new PropertyMetadata(null, OnSelectionGroupSourcePropertyChanged));
+            DependencyProperty.RegisterAttached("SelectionGroupSource", typeof(SelectionGroupSource), typeof(SelectionGroupManager), new PropertyMetadata(null, OnSelectionGroupSourcePropertyChanged));
 
         public static IBaseGroupManager<SelectionGroup, SelectionGroupSource> GetSelectionGroupManager(DependencyObject obj)
         {
@@ -50,9 +51,8 @@ namespace SoftCareManager.Common.UI.Groups.Selection
         private static void OnSelectionGroupNamePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
             IBaseGroupManager<SelectionGroup, SelectionGroupSource> groupManager = GetSelectionGroupManager(Application.Current.MainWindow);
-            SelectionGroup group = groupManager.AddSubscriber(e.NewValue as string, dependencyObject);
 
-            group.Bind();
+            groupManager.AddSubscriber(e.NewValue as string, dependencyObject as FrameworkElement);
         }
 
         private static void OnSelectionGroupSourcePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
@@ -64,9 +64,8 @@ namespace SoftCareManager.Common.UI.Groups.Selection
             }
 
             IBaseGroupManager<SelectionGroup, SelectionGroupSource> groupManager = GetSelectionGroupManager(Application.Current.MainWindow);
-            SelectionGroup group = groupManager.AddPublisher(selectionGroupSource);
 
-            group.Bind();
+            groupManager.AddPublisher(selectionGroupSource, dependencyObject as FrameworkElement);
         }
     }
 }

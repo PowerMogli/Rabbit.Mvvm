@@ -8,7 +8,6 @@ using SoftCareManager.Contracts.General;
 using SoftCareManager.Contracts.Services;
 using SoftCareManager.Contracts.ViewModel;
 using SoftCareManager.Contracts.WorkItems;
-using SoftCareManager.Common;
 
 namespace SoftCareManager.Business.Services.Application
 {
@@ -28,8 +27,6 @@ namespace SoftCareManager.Business.Services.Application
 
         public void RequestNavigation(INavigationParameter navigationParameter, IAppController appController)
         {
-            Guard.ArgumentIsNotNull(navigationParameter, () => navigationParameter);
-
             RequestNavigation(navigationParameter, nr => { }, appController);
         }
 
@@ -63,9 +60,9 @@ namespace SoftCareManager.Business.Services.Application
 
         private static bool IsNavigationAllowed(ViewModelBase viewModel)
         {
-            INavigationAware navigationAware = SafeCast.Cast<ViewModelBase, INavigationAware>(viewModel);
+            INavigationAware navigationAware = viewModel as INavigationAware;
 
-            return navigationAware.NavigateFrom();
+            return navigationAware == null || navigationAware.NavigateFrom();
         }
 
         private static bool MustBuildInstance(ViewModelBase viewModel, Type viewModelType)

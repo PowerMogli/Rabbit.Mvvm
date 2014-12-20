@@ -103,6 +103,7 @@
     <Compile Include="WorkItems\Patient\IPatientInsuranceWorkItem.cs" />
     <Compile Include="WorkItems\Patient\IPatientOverviewWorkItem.cs" />
     <Compile Include="WorkItems\Patient\IPatientTherapyWorkItem.cs" />
+    <Compile Include="WorkItems\Patient\IPatientWorkItemFactory.cs" />
     <Compile Include="WorkItems\View\IAppInformationWorkItem.cs" />
     <Compile Include="WorkItems\View\IAppMenuWorkItem.cs" />
     <Compile Include="WorkItems\IAppController.cs" />
@@ -119,7 +120,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)bin\Debug\SoftCareManager.Contracts.dll" "$(SolutionDir)Dlls\" /Y /I</PostBuildEvent>
+    <PostBuildEvent>start xcopy "$(ProjectDir)bin\Debug\SoftCareManager.Contracts.dll" "$(SolutionDir)Dlls\" /Y /I</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

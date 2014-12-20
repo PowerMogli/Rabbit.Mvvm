@@ -4,13 +4,13 @@ namespace SoftCareManager.Common
 {
     public static class SafeCast
     {
-        public static U Cast<T, U>(this T valueToCastFrom)
-            where U : class
+        public static T Cast<T>(this object valueToCastFrom)
+            where T : class
         {
-            U castedValue = valueToCastFrom as U;
+            T castedValue = valueToCastFrom as T;
             if (castedValue == null)
             {
-                throw new InvalidCastException(string.Format("Casting from {0} to {1} is not possible!", typeof(T), typeof(U)));
+                throw new InvalidCastException(string.Format("Casting to {0} is not possible!", typeof (T)));
             }
 
             return castedValue;

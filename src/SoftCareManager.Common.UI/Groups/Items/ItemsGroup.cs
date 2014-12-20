@@ -11,8 +11,6 @@ namespace SoftCareManager.Common.UI.Groups.Items
 {
     public class ItemsGroup : IGroup
     {
-        private const string BindingPath = "Items";
-
         private readonly List<DependencyObject> _itemsSubscriber;
         private IItemsPublisher _itemsPublisher;
 
@@ -55,7 +53,7 @@ namespace SoftCareManager.Common.UI.Groups.Items
             for (var index = _itemsSubscriber.Count - 1; index >= 0; index--)
             {
                 BindingOperations.ClearBinding(_itemsSubscriber[index], BaseActionMenu2.ItemsProperty);
-                BindingOperations.SetBinding(_itemsSubscriber[index], BaseActionMenu2.ItemsProperty, new Binding(BindingPath)
+                BindingOperations.SetBinding(_itemsSubscriber[index], BaseActionMenu2.ItemsProperty, new Binding("Items")
                 {
                     Source = _itemsPublisher,
                     Mode = BindingMode.OneWay,

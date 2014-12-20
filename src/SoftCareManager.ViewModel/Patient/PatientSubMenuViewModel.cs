@@ -55,14 +55,10 @@ namespace SoftCareManager.ViewModel.Patient
 
         private void InitializePatientStammdatenParameter()
         {
-            PatientStammdatenParameter = new NavigationParameter(Regions.OverView, typeof (PatientStammdatenViewModel));
+            PatientStammdatenParameter = new NavigationParameter(Regions.OverView, typeof(PatientStammdatenViewModel));
             PatientStammdatenParameter.SetParameter(new KeyValuePair<string, object>[]
             {
-                new KeyValuePair<string, object>("Patient", new PatientViewModel(
-                                                                new PatientArticleWorkItem(null),
-                                                                new PatientHospitalWorkItem(null),
-                                                                new PatientInsuranceWorkItem(null),
-                                                                new PatientTherapyWorkItem())
+                new KeyValuePair<string, object>("Patient", new PatientViewModel(new PatientWorkItemFactory(null))
                 {
                     FirstName = "Albert",
                     LastName = "Slupianek",
@@ -74,13 +70,9 @@ namespace SoftCareManager.ViewModel.Patient
 
         private void InitializePatientTherapyParameter()
         {
-            NavigationParameter patientTherapyActionMenuParameter = new NavigationParameter(Regions.AppActionMenuView, typeof (PatientTherapyActionMenuViewModel));
+            NavigationParameter patientTherapyActionMenuParameter = new NavigationParameter(Regions.AppActionMenuView, typeof(PatientTherapyActionMenuViewModel));
 
-            PatientViewModel patient = new PatientViewModel(
-                new PatientArticleWorkItem(null),
-                new PatientHospitalWorkItem(null),
-                new PatientInsuranceWorkItem(null),
-                new PatientTherapyWorkItem())
+            PatientViewModel patient = new PatientViewModel(new PatientWorkItemFactory(null))
             {
                 FirstName = "Peter",
                 LastName = "Lustig",
@@ -93,7 +85,7 @@ namespace SoftCareManager.ViewModel.Patient
                 new KeyValuePair<string, object>("Patient", patient)
             });
 
-            NavigationParameter patientTherapyListOverviewParameter = new NavigationParameter(Regions.OverView, typeof (PatientTherapyListOverviewViewModel));
+            NavigationParameter patientTherapyListOverviewParameter = new NavigationParameter(Regions.OverView, typeof(PatientTherapyListOverviewViewModel));
             patientTherapyListOverviewParameter.SetParameter(new KeyValuePair<string, object>[]
             {
                 new KeyValuePair<string, object>("Patient", patient)

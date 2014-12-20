@@ -2,28 +2,29 @@
 using System.Windows;
 
 using SoftCareManager.Common.UI.Groups.Base;
+using SoftCareManager.Common.UI.Controls;
 
 namespace SoftCareManager.Common.UI.Groups.Items
 {
-    [Export(typeof (IBaseGroupManager<ItemsGroup, ItemsGroupSource>))]
+    [Export(typeof(IBaseGroupManager<ItemsGroup, ItemsGroupSource>))]
     public class ItemsGroupManager : BaseGroupManager<ItemsGroup, ItemsGroupSource>
     {
         public static readonly DependencyProperty ItemsGroupManagerProperty =
             DependencyProperty.RegisterAttached("ItemsGroupManager",
-                                                typeof (IBaseGroupManager<ItemsGroup, ItemsGroupSource>),
-                                                typeof (ItemsGroupManager),
+                                                typeof(IBaseGroupManager<ItemsGroup, ItemsGroupSource>),
+                                                typeof(ItemsGroupManager),
                                                 new PropertyMetadata(null));
 
         public static readonly DependencyProperty ItemsGroupNameProperty =
             DependencyProperty.RegisterAttached("ItemsGroupName",
-                                                typeof (string),
-                                                typeof (ItemsGroupManager),
+                                                typeof(string),
+                                                typeof(ItemsGroupManager),
                                                 new PropertyMetadata(string.Empty, OnItemsGroupNamePropertyChanged));
 
         public static readonly DependencyProperty ItemsGroupSourceProperty =
             DependencyProperty.RegisterAttached("ItemsGroupSource",
-                                                typeof (ItemsGroupSource),
-                                                typeof (ItemsGroupManager),
+                                                typeof(ItemsGroupSource),
+                                                typeof(ItemsGroupManager),
                                                 new PropertyMetadata(null, OnItemsGroupSourcePropertyChanged));
 
         public static IBaseGroupManager<ItemsGroup, ItemsGroupSource> GetItemsGroupManager(DependencyObject obj)
@@ -60,11 +61,9 @@ namespace SoftCareManager.Common.UI.Groups.Items
         private static void OnItemsGroupNamePropertyChanged(DependencyObject dependencyObject,
                                                             DependencyPropertyChangedEventArgs e)
         {
-            IBaseGroupManager<ItemsGroup, ItemsGroupSource> groupManager =
-                GetItemsGroupManager(Application.Current.MainWindow);
-            ItemsGroup group = groupManager.AddSubscriber(e.NewValue as string, dependencyObject);
+            IBaseGroupManager<ItemsGroup, ItemsGroupSource> groupManager = GetItemsGroupManager(Application.Current.MainWindow);
 
-            group.Bind();
+            groupManager.AddSubscriber(e.NewValue as string, dependencyObject as FrameworkElement);
         }
 
         private static void OnItemsGroupSourcePropertyChanged(DependencyObject dependencyObject,
@@ -77,9 +76,7 @@ namespace SoftCareManager.Common.UI.Groups.Items
             }
 
             IBaseGroupManager<ItemsGroup, ItemsGroupSource> groupManager = GetItemsGroupManager(Application.Current.MainWindow);
-            ItemsGroup group = groupManager.AddPublisher(itemsGroupSource);
-
-            group.Bind();
+            groupManager.AddPublisher(itemsGroupSource, dependencyObject as FrameworkElement);
         }
     }
 }

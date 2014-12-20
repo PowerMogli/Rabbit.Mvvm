@@ -7,6 +7,8 @@ using SoftCareManager.Contracts.Groups.Items;
 using SoftCareManager.Contracts.Groups.Selection;
 using SoftCareManager.Contracts.Model.Patient;
 using SoftCareManager.Contracts.ViewModel;
+using SoftCareManager.Contracts.WorkItems.Patient;
+using SoftCareManager.Contracts.WorkItems;
 
 namespace SoftCareManager.ViewModel.Patient
 {
@@ -45,7 +47,7 @@ namespace SoftCareManager.ViewModel.Patient
 
         public void Create()
         {
-            Items.Add(new PatientViewModel(null, null, null, new PatientTherapyWorkItem())
+            Items.Add(new PatientViewModel(new PatientWorkItemFactory(null))
             {
                 FirstName = "Franz",
                 LastName = "Beckenbauer",

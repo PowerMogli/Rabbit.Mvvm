@@ -7,9 +7,17 @@ namespace SoftCareManager.Common
     {
         public static void ArgumentIsNotNull<TArgument>(this TArgument argument, Expression<Func<TArgument>> argumentLambda)
         {
-            string stringValue = argument as string;
-            if (string.IsNullOrWhiteSpace(stringValue)
-                || argument == null)
+            bool throwException = false;
+            if (argument is string)
+            {
+                throwException = string.IsNullOrWhiteSpace(argument as string);
+            }
+            else
+            {
+                throwException = argument == null;
+            }
+
+            if (throwException)
             {
                 throw new ArgumentNullException(GetPropertyName(argumentLambda), "Argument cannot be null!");
             }
